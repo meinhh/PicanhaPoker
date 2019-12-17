@@ -1,6 +1,6 @@
-import Card from 'common/Card';
-import { CardSuit } from 'common/CardSuit';
-import { CardRank } from 'common/CardRank';
+import Card from 'common/card/Card';
+import { CardSuit } from 'common/card/CardSuit';
+import { CardRank } from 'common/card/CardRank';
 
 export default class Deck {
     private cards: Card[];
