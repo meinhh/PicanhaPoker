@@ -1,6 +1,6 @@
 export enum CardSuit {
-    Diamonds,
-    Hearts,
-    Clubs,
-    Spades
+    Diamonds = 'Diamonds',
+    Hearts = 'Hearts',
+    Clubs = 'Clubs',
+    Spades = 'Spades'
 }
