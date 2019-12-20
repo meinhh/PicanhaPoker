@@ -25,7 +25,8 @@ export default class Deck {
         return this.cards.pop();
     }
 
-    public shuffle(): void {
+    public shuffle(): Deck {
         this.cards = this.cards.sort(() => Math.random() - 0.5);
+        return this;
     }
 }
