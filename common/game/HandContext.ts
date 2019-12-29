@@ -1,7 +1,6 @@
 import Card from '../card/Card';
-import PlayerAction from './PlayerAction'
 import { HandStage } from './HandStage';
-import GameEvent from './GameEvent';
+import GameEvent from './gameEvents/GameEvent';
 
 export enum PlayerStatus {
     Folded,
