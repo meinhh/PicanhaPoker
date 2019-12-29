@@ -1,5 +1,5 @@
 import Card from '../card/Card';
-import PlayerActionInfo from './PlayerActionInfo'
+import PlayerAction from './PlayerAction'
 import { HandStage } from './HandStage';
 
 export enum PlayerStatus {
@@ -16,7 +16,7 @@ export default class HandContext {
     public bigBlindPlayer: string;
     public handStage: HandStage;
     public winner: string;
-    public playerActions: PlayerActionInfo[];
+    public playerActions: PlayerAction[];
     public playerStatuses: {[playerName: string]: PlayerStatus}
     public playerInvestments: {[playerName: string]: number};
 }
