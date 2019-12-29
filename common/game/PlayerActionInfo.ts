@@ -11,5 +11,6 @@ export default class PlayerActionInfo {
     public actionType: PlayerActionType;
     public sum: number;
     public handStage: HandStage;
-    public previousHandPot: number;
+    public previousPotOnTable: number;
+    public previousPlayerPot: number;
 }
