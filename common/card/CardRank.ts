@@ -11,5 +11,5 @@ export enum CardRank {
     Jack,
     Queen,
     King,
-    Ace
+    Ace,
 }
