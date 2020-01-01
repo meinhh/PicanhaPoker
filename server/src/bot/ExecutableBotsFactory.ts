@@ -1,9 +1,9 @@
 import Sandbox = require('sandbox');
 import IExecutableBot from './IExecutableBot';
-import SendboxExecutionBot from './SendboxExecutionBot';
+import SandboxExecutableBot from './SandboxExecutableBot';
 
 export default class ExecutableBotsFactory {
     public createSandboxBot(code: string): IExecutableBot {
-        return new SendboxExecutionBot(code, new Sandbox());
+        return new SandboxExecutableBot(code, new Sandbox());
     }
 }

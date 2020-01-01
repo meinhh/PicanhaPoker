@@ -1,6 +1,6 @@
 import PlayerMoveData from "./PlayerMove";
 
 export default class BotExecutionResult {
-    logs: string[];
-    move: PlayerMoveData;
+    public constructor(public logs: string[], public move: PlayerMoveData) {
+    }
 }

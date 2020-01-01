@@ -2,10 +2,10 @@ import { GameEventType } from "./GameEvent"
 import GameEvent from "./GameEvent";
 
 export enum PlayerActionType {
-    Fold,
-    Check,
-    Call,
-    Raise
+    FOLD = 0,
+    CHECK = 1,
+    CALL = 2,
+    RAISE = 3
 }
 
 export default class PlayerMoveEvent extends GameEvent {
