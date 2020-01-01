@@ -16,7 +16,7 @@ export default class HandAnalyzer {
 			])
 			.map(currCommunityCards => this.determineWinner(currCommunityCards, playersHands))
 			.groupBy()
-			.mapValues((x: number) => x / this.TIMES_TO_RUN)
+			.mapValues((x: string[]) => x.length / this.TIMES_TO_RUN)
 			.value();
 	}
 
