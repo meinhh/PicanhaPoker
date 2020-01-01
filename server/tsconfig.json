@@ -4,7 +4,7 @@
 	"esModuleInterop": true,
 	"target": "es2017",
 	"noImplicitAny": false,
-	"allowJs": false,
+	"allowJs": true,
 	"moduleResolution": "node",
 	"sourceMap": true,
 	"outDir": "dist",

@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "[Dev] Run server",
+            "program": "${workspaceFolder}\\server\\dist\\server\\src\\Server.js",
+            "outFiles": [
+                "${workspaceFolder}/server/dist/*.js"
+            ],
+            "env": {
+                "NODE_ENV": "dev"
+            },
+            "preLaunchTask": "build_server",
+            "cwd": "${workspaceFolder}",
+            "protocol": "inspector",
+
+        }
+    ]
+}
