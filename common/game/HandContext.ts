@@ -17,6 +17,6 @@ export default class HandContext {
     public handStage: HandStage;
     public winner: string;
     public handFlow: GameEvent[];
-    public playerStatuses: {[playerName: string]: PlayerStatus}
+    public playerStatuses: {[playerName: string]: PlayerStatus};
     public playerInvestments: {[playerName: string]: number};
 }
