@@ -1,5 +1,6 @@
 export enum CardRank {
-    Two = 2,
+    One = 1,
+    Two,
     Three,
     Four,
     Five,
