@@ -1,32 +1,40 @@
 import Card from 'common/card/Card';
 import { CardSuit } from 'common/card/CardSuit';
 import { CardRank } from 'common/card/CardRank';
+import shuffle from 'lodash/shuffle';
 
 export default class Deck {
-    private cards: Card[];
+    private readonly cards: Card[];
 
-    public constructor() {
-        this.cards = [];
+    public constructor(cards?: Card[]) {
+        this.cards = cards ? cards : this.initializeNewDeck();
+    }
 
-        for (const suit of Object.values(CardSuit)) {
-            for (const rank of Object.values(CardRank)) {
-                let card = new Card();
-                card.rank = CardRank[rank];
-                card.suit = CardSuit[suit];
+    public clone() : Deck {
+        return new Deck(this.cards);
+    }
 
-                this.cards.push(card);
-            }
-        }
-
-        this.shuffle();
+    public shuffle(): Deck {
+        shuffle(this.cards);
+        return this;
     }
 
     public draw(): Card {
         return this.cards.pop();
     }
 
-    public shuffle(): Deck {
-        this.cards = this.cards.sort(() => Math.random() - 0.5);
-        return this;
+    private initializeNewDeck(): Card[] {
+        const cards = [];
+        for (const suit of Object.values(CardSuit)) {
+            for (const rank of Object.values(CardRank)) {
+                let card = new Card();
+                card.rank = CardRank[rank];
+                card.suit = CardSuit[suit];
+
+                cards.push(card);
+            }
+        }
+
+        return shuffle(cards);
     }
 }
