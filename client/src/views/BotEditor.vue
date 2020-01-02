@@ -1,6 +1,10 @@
 <template>
     <div class="editor-page" :style="{'background-image': 'url(' + require('../assets/bg6.jpg') + ')'}">
-        <h1>hello world</h1>
+        <div class="header">
+            <div class="title">
+                WRITE YOUR BOT
+            </div>
+        </div>
         <div class="editor-container">
             <codemirror v-model="code" :options="cmOptions"></codemirror>
         </div>
@@ -15,10 +19,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class BotEditor extends Vue {
   @Prop() private msg!: string;
 
-  public code: string = 'const a = 10';
+  public code: string = 'function playTurn(tableContext) {\n\t\n}';
 
   public cmOptions = {
-        tabSize: 4,
+        tabSize: 2,
         mode: 'text/javascript',
         theme: 'monokai',
         lineNumbers: true,
@@ -37,9 +41,17 @@ export default class BotEditor extends Vue {
     // background: rgb(40,103,56);
     // background-image: url('../assets/bg2.jpg')
     background-size: 100% 100%;
+    
+    .header {
+        opacity: 0.55;
+        background: #000;
+        color: #eee;
 
-    h1 {
-        margin-top:0;
+        .title {
+            padding: 12px;
+            font-size: 36px;
+            font-family: 'CONSOLAS'
+        }
     }
 
     .CodeMirror {
