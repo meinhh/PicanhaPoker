@@ -13,11 +13,12 @@ export default class Postgresql {
         });
     }
 
-    public async query(sql: string): Promise<any> {
+    public async query<T>(sql: string, params: any[] = []): Promise<T> {
         const client = await this.pool.connect();
         try {
-            const res = await client.query(sql);
-            return camelcase(res.rows);
+            const res = await client.query(sql, params);
+            const asCamcelcase: any = camelcase(res.rows);
+            return <T>(asCamcelcase);
         } finally {
             client.release();
         }

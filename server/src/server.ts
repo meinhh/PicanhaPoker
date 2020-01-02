@@ -1,16 +1,12 @@
 import express from 'express';
+import User from 'common/app/User';
 import ExecutableBotsFactory from './bot/ExecutableBotsFactory';
 import Postgresql from './dal/postgresql/Postgresql';
+import PgUsersDal from './dal/postgresql/PgUsersDal';
 
 const app = express();
 const port = 3000;
 const env = process.env.NODE_ENV;
-
-new Postgresql("rajje.db.elephantsql.com", "uqaihmvp", "uqaihmvp", "F8qBgGNmE0BSMT__28WkZMKvmkf9fRcT")
-    .query("select * from users")
-    .then(rows => {
-        console.log(rows);
-    });
 
 console.log("Launching on environment: " + env);
 
