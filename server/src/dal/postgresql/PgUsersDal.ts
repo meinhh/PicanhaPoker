@@ -21,8 +21,10 @@ export default class PgUsersDal extends BasePostgresqlDal implements IUsersDal {
             new Date()
         ]);
 
-        if (results.length > 0) {
-            return results[0];
+        if (results.length == 0) {
+            throw 'User was not created';
         }
+
+        return results[0];
     }
 }

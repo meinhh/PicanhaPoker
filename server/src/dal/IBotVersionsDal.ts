@@ -5,4 +5,5 @@ export default interface IBotVersionsDal {
     getBotVersion(versionId: number): Promise<BotVersion>;
     getBotVersionWithCode(versionId: number): Promise<BotVersion>;
     createBotVersion(botId: number, code: string, message?: string): Promise<BotVersion>;
+    deleteBotVersion(versionId: number): Promise<void>;
 }

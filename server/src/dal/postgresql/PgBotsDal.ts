@@ -5,7 +5,7 @@ import Bot from "common/app/Bot";
 export default class PgBotsDal extends BasePostgresqlDal implements IBotsDal {
     private readonly SELECT_USER_BOTS = "SELECT * FROM bots WHERE owner_user_id = $1";
     private readonly SELECT_BOT_BY_ID = "SELECT * FROM bots WHERE bot_id = $1";
-    private readonly INSERT_BOT = "INSERT INTO bots (name, owner_user_id, avatar_img_url) values ($1, $2, $3)";
+    private readonly INSERT_BOT = "INSERT INTO bots (name, owner_user_id, avatar_img_url) values ($1, $2, $3) RETURNING *";
 
     public async getUserBots(userId: number): Promise<Bot[]> {
         const results = await this.queryExecutor.query<Bot[]>(this.SELECT_USER_BOTS, [userId]);

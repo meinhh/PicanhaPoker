@@ -2,7 +2,6 @@ import express from 'express';
 import User from 'common/app/User';
 import ExecutableBotsFactory from './bot/ExecutableBotsFactory';
 import Postgresql from './dal/postgresql/Postgresql';
-import PgUsersDal from './dal/postgresql/PgUsersDal';
 
 const app = express();
 const port = 3000;
