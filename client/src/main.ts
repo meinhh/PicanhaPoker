@@ -12,8 +12,11 @@ import 'codemirror/theme/darcula.css';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/mode/javascript/javascript.js'
 
+import vuetify from './plugins/vuetify';
+
 new Vue({
   router,
   store,
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app');
