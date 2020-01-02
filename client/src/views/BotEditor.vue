@@ -12,6 +12,9 @@
                 <v-layout fill-height column>
                     <v-flex lg1>
                         <v-toolbar dense dark short class="editor-toolbar">
+                            <v-avatar size="32">
+                                <img src="https://www.globalpokerindex.com/wp-content/uploads/2015/08/doyle_brunson-210x210.jpg">
+                            </v-avatar>
                             <div class="path">
                                 <span class="level">{{username}}</span>
                                 <span class="divier"></span>
