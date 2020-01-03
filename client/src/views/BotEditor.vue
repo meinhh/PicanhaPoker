@@ -3,8 +3,7 @@
         <v-layout column fill-height>
             <page-title text="WRITE YOUR BOT"></page-title>
             <v-flex class="editor-container">
-                <v-layout fill-height column>
-                    <v-flex lg1>
+                <!-- <v-layout fill-height column> -->
                         <v-toolbar dense dark short class="editor-toolbar">
                             <v-avatar size="32">
                                 <img src="https://www.globalpokerindex.com/wp-content/uploads/2015/08/doyle_brunson-210x210.jpg">
@@ -24,11 +23,10 @@
                                 <span>{{action.tooltip}}</span>
                             </v-tooltip>
                         </v-toolbar>
-                    </v-flex>
-                    <v-flex class="editor" lg11>
+                    <div class="editor">
                         <codemirror v-model="code" :options="cmOptions"></codemirror>
-                    </v-flex>
-                </v-layout>
+                    </div>
+                <!-- </v-layout> -->
             </v-flex>
         </v-layout>
     </div>
@@ -94,8 +92,12 @@ export default class BotEditor extends Vue {
         position: relative;
         overflow: hidden;
         flex: 9;
+        // display: flex;
+        // flex-direction: column;;
         
         .editor-toolbar {
+            height: 8%!important;
+            // flex-shrink: 1;
             background-color: $tp-card-bg!important;
             .path {
                 span.level {
@@ -113,14 +115,17 @@ export default class BotEditor extends Vue {
             }
         }
         .editor {
-            overflow: hidden;
-            height: 100%;
+            height: 92%;
+            flex:1 1 auto;
+            margin-top:0;
+            position:relative;
             .CodeMirror {
-                height: 100%;
-            }
-            .vue-codemirror {
-                height: 100%;
-                text-align: left;
+                position:absolute;
+                top:0;
+                bottom:0;
+                left:0;
+                right:0;
+                height:100%;
             }
         }
     }

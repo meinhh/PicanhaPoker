@@ -5,12 +5,8 @@ import store from './store';
 
 Vue.config.productionTip = false;
 
-import VueCodemirror from 'vue-codemirror'
-Vue.use(VueCodemirror);
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/darcula.css';
-import 'codemirror/theme/monokai.css';
-import 'codemirror/mode/javascript/javascript.js'
+import codemirror from './plugins/codemirror';
+Vue.use(codemirror);
 
 import vuetify from './plugins/vuetify';
 
