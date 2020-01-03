@@ -1,4 +1,9 @@
 import Vue from 'vue';
+
+import buildDependencyContainer from './app.container';
+buildDependencyContainer();
+
+
 import App from './App.vue';
 import router from './router';
 import store from './store';

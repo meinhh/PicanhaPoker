@@ -1,9 +1,15 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
+import { inject } from 'inversify-props';
+import 'reflect-metadata'
+
 import Bot from 'common/app/Bot'
+import IBotsApiAccessor from '@/services/botsApiAccessor/IBotsApiAccessor';
 
 @Module
 export default class BotsModule extends VuexModule {
-    _myBots: Bot[];
+    @inject('BotsAccessor') private _botsAccessor: IBotsApiAccessor;
+
+    private _myBots: Bot[];
 
     @Mutation
     setMyBots(myBots: Bot[]) {
