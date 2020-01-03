@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import BotEditor from '../views/BotEditor.vue';
+import BotEditor from '@/views/BotEditor.vue';
+import MyProfile from '@/views/MyProfile.vue';
 
 Vue.use(VueRouter);
 
@@ -16,6 +17,11 @@ const routes = [
     name: 'editor',
     component: BotEditor,
   },
+  {
+      path: '/me',
+      name: 'my_page',
+      component: MyProfile
+  }
 ];
 
 const router = new VueRouter({

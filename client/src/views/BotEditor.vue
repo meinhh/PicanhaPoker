@@ -1,13 +1,12 @@
 <template>
     <div class="editor-page" :style="{'background-image': 'url(' + require('../assets/bg6.jpg') + ')'}">
         <v-layout column fill-height>
-            <v-flex class="header" justify-center>
-                <v-layout column fill-height>
+            <!-- <v-flex class="header" justify-center>
                 <div class="display-1 page-title">
                     WRITE YOUR BOT
                 </div>
-                </v-layout>
-            </v-flex>
+            </v-flex> -->
+            <page-title text="WRITE YOUR BOT"></page-title>
             <v-flex class="editor-container">
                 <v-layout fill-height column>
                     <v-flex lg1>
@@ -42,8 +41,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import PageTitle from '@/components/PageTitle.vue';
 
 @Component({
+    components: {
+        PageTitle
+    }
 })
 export default class BotEditor extends Vue {
     public botName: string = 'MyBot';
@@ -91,18 +94,18 @@ export default class BotEditor extends Vue {
     height: 100%;
     background-size: 100% 100%;
     
-    .header {
-        opacity: 0.55;
-        background: #000;
-        color: #eee;
-        flex: 1;
+    // .header {
+    //     opacity: 0.55;
+    //     background: #000;
+    //     color: #eee;
+    //     flex: 1;
 
-        .page-title {
-            text-align: center;
-            padding: 12px;
-            font-family: 'CONSOLAS'!important;
-        }
-    }
+    //     .page-title {
+    //         text-align: center;
+    //         padding: 12px;
+    //         font-family: 'CONSOLAS'!important;
+    //     }
+    // }
 
     .editor-container {
         opacity: 0.9;
@@ -111,7 +114,7 @@ export default class BotEditor extends Vue {
         flex: 9;
         
         .editor-toolbar {
-            background-color: #272822!important;
+            background-color: $tp-card-bg!important;
             .path {
                 span.level {
                     margin: 0 10px;
