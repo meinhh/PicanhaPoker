@@ -15,11 +15,27 @@
         </v-card-text>
 
         <v-card-actions>
+            <v-menu bottom right dark>
+                <template v-slot:activator="{ on }">
+                    <v-btn dark icon large color="orange" v-on="on">
+                        <v-icon>more_horiz</v-icon>
+                    </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item v-for="action in menuActions" :key="action.caption" @click="() => {}">
+                        <v-list-item-icon>
+                            <v-icon>{{action.icon}}</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>{{action.caption}}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+            
             <v-spacer></v-spacer>
             
-            <v-tooltip bottom v-for="action in actions" :key="action.icon">
+            <v-tooltip bottom v-for="action in quickActions" :key="action.icon">
                 <template v-slot:activator="{ on }">
-                    <v-btn icon color="orange" v-on="on">
+                    <v-btn icon color="orange" v-on="on" large>
                         <v-icon>{{action.icon}}</v-icon>
                     </v-btn>
                 </template>
@@ -39,7 +55,17 @@ import Bot from '../../../common/app/Bot';
 export default class BotPreviewCard extends Vue {
     @Prop() public bot: Bot;
 
-    public actions = [{
+    public menuActions= [ {
+        icon: "edit",
+        caption: "Edit details",
+        onClick: null
+    }, {
+        icon: "delete",
+        caption: "Delete bot",
+        onClick: null
+    }]
+
+    public quickActions = [{
         tooltip: "Bot stats",
         icon: "trending_up",
         onClick: null

@@ -1,3 +1,5 @@
+import BotVersion from "./BotVersion";
+
 export default class Bot {
     public botId: number;
     public name: string;
@@ -5,4 +7,6 @@ export default class Bot {
     public ownerUserId: number;
     public activeVersionId?: number;
     public avatarImageUrl?: string;
+
+    public activeVersion?: BotVersion;
 }

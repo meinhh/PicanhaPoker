@@ -1,11 +1,6 @@
 <template>
     <div class="editor-page" :style="{'background-image': 'url(' + require('../assets/bg6.jpg') + ')'}">
         <v-layout column fill-height>
-            <!-- <v-flex class="header" justify-center>
-                <div class="display-1 page-title">
-                    WRITE YOUR BOT
-                </div>
-            </v-flex> -->
             <page-title text="WRITE YOUR BOT"></page-title>
             <v-flex class="editor-container">
                 <v-layout fill-height column>
@@ -93,19 +88,6 @@ export default class BotEditor extends Vue {
 .editor-page {
     height: 100%;
     background-size: 100% 100%;
-    
-    // .header {
-    //     opacity: 0.55;
-    //     background: #000;
-    //     color: #eee;
-    //     flex: 1;
-
-    //     .page-title {
-    //         text-align: center;
-    //         padding: 12px;
-    //         font-family: 'CONSOLAS'!important;
-    //     }
-    // }
 
     .editor-container {
         opacity: 0.9;

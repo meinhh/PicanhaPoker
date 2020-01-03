@@ -10,7 +10,7 @@
                 <v-sheet dark tile elevation=10 class="create-bot" width=100%>
                     <div class="link">
                         <v-icon color="orange">code</v-icon>
-                        <div class="headline">WRITE A BOT</div>
+                        <div class="headline">CREATE A BOT</div>
                     </div>
                 </v-sheet>
             </v-flex>
@@ -46,6 +46,7 @@ export default class MyProfile extends Vue {
     background-size: 100% 100%; 
 
     .create-bot {
+        padding: 20px;
         font-family: $app-font;
         display: flex;
         text-align: center;
@@ -57,13 +58,13 @@ export default class MyProfile extends Vue {
         .link {
             cursor: pointer;
             .v-icon {
-                font-size: 92px;
+                font-size: 85px;
                 transition: font-size 0.5s;
             }
 
             &:hover {
                 .v-icon {
-                    font-size: 110px;
+                    font-size: 100px;
                 }
             }
         }

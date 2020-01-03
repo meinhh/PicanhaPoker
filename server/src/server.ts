@@ -1,17 +1,23 @@
 import express from 'express';
+import bodyParser = require('body-parser');
+
 import User from 'common/app/User';
 import ExecutableBotsFactory from './bot/ExecutableBotsFactory';
 import Postgresql from './dal/postgresql/Postgresql';
 import PgBotsDal from './dal/postgresql/PgBotsDal';
 import PgBotVersionsDal from './dal/postgresql/PgBotVersionsDal';
+import BotsRepository from './bot/BotsRepository';
+import BotsController from './controllers/BotsController';
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const port = 3000;
 const env = process.env.NODE_ENV;
 
 const postgresql = new Postgresql("rajje.db.elephantsql.com", "uqaihmvp", "uqaihmvp", "F8qBgGNmE0BSMT__28WkZMKvmkf9fRcT");
-// new PgBotVersionsDal(postgresql).getBotVersionWithCode(1).then(console.log);
-// new PgBotVersionsDal(postgresql).createBotVersion(1, "() => {console.log('hi');}").then(console.log);
+const botsRepository = new BotsRepository(new PgBotsDal(postgresql), new PgBotVersionsDal(postgresql));;
 
 console.log("Launching on environment: " + env);
 
@@ -24,5 +30,10 @@ app.get('/:cmd', (req, res) => {
             res.send(r);
         }).catch(err => res.status(500).send(err));
 });
+
+const apiRouter = express.Router()
+    .use('/bots', new BotsController(botsRepository).router())
+
+app.use('/api', apiRouter);
 
 app.listen(port, () => console.log(`app listening on port ${port}!`));
