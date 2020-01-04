@@ -20,6 +20,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Action, Getter } from 'vuex-class';
 import PageTitle from '@/components/PageTitle.vue';
 import BotPreviewCard from '@/components/BotPreviewCard.vue';
 import Bot from '../../../common/app/Bot';
@@ -31,11 +32,17 @@ import Bot from '../../../common/app/Bot';
     }
 })
 export default class MyProfile extends Vue {
+    @Action('loadMyBots') private loadMyBots: () => void;
+    
     public bot: Bot = {
         botId: 1,
         name: "Brundson",
         dateCreated: new Date(),
         ownerUserId: 1,
+    }
+
+    public mounted() {
+        this.loadMyBots();
     }
 }
 </script>

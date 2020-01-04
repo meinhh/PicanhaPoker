@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser = require('body-parser');
+import ExpressCors from 'cors';
 
 import User from 'common/app/User';
 import ExecutableBotsFactory from './bot/ExecutableBotsFactory';
@@ -12,6 +13,7 @@ import BotsController from './controllers/BotsController';
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(ExpressCors())
 
 const port = 3000;
 const env = process.env.NODE_ENV;

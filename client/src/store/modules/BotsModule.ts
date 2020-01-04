@@ -19,4 +19,11 @@ export default class BotsModule extends VuexModule {
     get myBots() {
         return this._myBots;
     }
+
+    @Action({ commit: "setMyBots" })
+    async loadMyBots() {
+        const myBots = await this._botsAccessor.getMyBots();
+        console.log(myBots);
+        return myBots;
+    }
 }
