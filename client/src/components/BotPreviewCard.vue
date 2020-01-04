@@ -11,6 +11,9 @@
             <div>
                 PROFIT: <span class="profit">10000$</span>
             </div>
+            <div>
+                LAST MODIFIED: <span class="profit">{{bot.activeVersion.dateCreated}}</span>
+            </div>
 
         </v-card-text>
 
@@ -47,7 +50,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-// import Bot from 'common/app/Bot';
 import Bot from '../../../common/app/Bot';
 
 @Component({

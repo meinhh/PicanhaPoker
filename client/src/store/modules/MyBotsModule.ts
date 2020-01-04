@@ -34,14 +34,14 @@ export default class MyBotsModule extends VuexModule {
 
     @Action
     async loadMyBots() {
-        this.context.commit('setMyBotsLoadingState', AsyncState.LOADING);
+        this.context.commit('setMyBotsLoadingStatus', AsyncState.LOADING);
 
         try {
             const myBots = await this._botsAccessor.getMyBots();
             this.context.commit('setMyBots', myBots);
-            this.context.commit('setMyBotsLoadingState', AsyncState.DONE);
+            this.context.commit('setMyBotsLoadingStatus', AsyncState.DONE);
         } catch (ex) {
-            this.context.commit('setMyBotsLoadingState', AsyncState.ERROR);
+            this.context.commit('setMyBotsLoadingStatus', AsyncState.ERROR);
         }
 
     }

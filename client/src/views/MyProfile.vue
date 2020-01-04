@@ -2,7 +2,7 @@
     <div class="my-profile-page" :style="{'background-image': 'url(' + require('../assets/bg.jpg') + ')'}">
         <page-title text="ME"></page-title>
         <v-layout class="d-wrap flex-wrap">
-            <v-flex lg3 style="padding: 20px" v-for="n in 3" :key="n">
+            <v-flex lg3 style="padding: 20px" v-for="bot in myBots" :key="bot.botId">
                 <bot-preview-card :bot="bot">
                 </bot-preview-card>
             </v-flex>
@@ -32,14 +32,11 @@ import Bot from '../../../common/app/Bot';
     }
 })
 export default class MyProfile extends Vue {
-    @Action('loadMyBots') private loadMyBots: () => void;
-    
-    public bot: Bot = {
-        botId: 1,
-        name: "Brundson",
-        dateCreated: new Date(),
-        ownerUserId: 1,
-    }
+    @Getter('myBots')
+    public myBots!: Bot[];
+
+    @Action('loadMyBots') 
+    private loadMyBots: () => void;
 
     public mounted() {
         this.loadMyBots();
