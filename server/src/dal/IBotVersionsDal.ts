@@ -1,4 +1,4 @@
-import BotVersion from 'common/app/BotVersion';
+import { BotVersion } from 'common';
 
 export default interface IBotVersionsDal {
     getVersionsForBot(botId: number): Promise<BotVersion[]>;

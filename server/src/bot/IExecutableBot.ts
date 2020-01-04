@@ -1,4 +1,4 @@
-import TableContext from "common/game/TableContext";
+import { TableContext } from "common";
 import BotExecutionResult from "./BotExecutionResult";
 
 export default interface IExecutableBot {

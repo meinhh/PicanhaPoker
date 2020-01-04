@@ -1,6 +1,6 @@
-import BotVersion from "./BotVersion";
+import { BotVersion } from "./BotVersion";
 
-export default class Bot {
+export class Bot {
     public botId: number;
     public name: string;
     public dateCreated: Date;

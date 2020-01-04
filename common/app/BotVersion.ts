@@ -1,4 +1,4 @@
-export default class BotVersion {
+export class BotVersion {
     public botVersionId: number;
     public botId: number;
     public dateCreated: Date;

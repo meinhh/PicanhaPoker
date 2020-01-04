@@ -1,4 +1,4 @@
-import Bot from 'common/app/Bot';
+import { Bot } from 'common';
 
 export default interface IBotsDal {
     getUserBots(userId: number): Promise<Bot[]>;

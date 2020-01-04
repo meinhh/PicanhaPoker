@@ -1,5 +1,5 @@
 import { GameEventType } from "./GameEvent"
-import GameEvent from "./GameEvent";
+import { GameEvent } from "./GameEvent";
 
 export enum PlayerActionType {
     FOLD = 0,
@@ -8,7 +8,7 @@ export enum PlayerActionType {
     RAISE = 3
 }
 
-export default class PlayerMoveEvent extends GameEvent {
+export class PlayerMoveEvent extends GameEvent {
     public eventType = GameEventType.PlayerAction;
     public playerMoveType: PlayerActionType;
     public moneyAmount: number;

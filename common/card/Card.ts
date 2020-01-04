@@ -1,7 +1,7 @@
 import { CardSuit } from "./CardSuit";
 import { CardRank } from "./CardRank";
 
-export default class Card {
+export class Card {
     public suit: CardSuit;
     public rank: CardRank;
 }

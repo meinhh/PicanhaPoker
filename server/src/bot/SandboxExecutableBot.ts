@@ -1,4 +1,4 @@
-import TableContext from 'common/game/TableContext';
+import { TableContext } from 'common';
 import IExecutableBot from './IExecutableBot';
 import BotExecutionResult from './BotExecutionResult';
 import { PlayerActionType } from '../../../common/game/gameEvents/PlayerMoveEvent';

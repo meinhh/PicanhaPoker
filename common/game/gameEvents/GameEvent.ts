@@ -5,7 +5,7 @@ export enum GameEventType {
     PlayerAction
 }
 
-export default abstract class GameEvent {
+export abstract class GameEvent {
     public handStage: HandStage;
     public tablePot: number;
     public abstract eventType: GameEventType;

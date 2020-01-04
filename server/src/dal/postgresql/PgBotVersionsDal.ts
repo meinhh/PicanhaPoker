@@ -1,6 +1,6 @@
 import BasePostgresqlDal from "./BasePostgresqlDal";
 import IBotVersionsDal from "dal/IBotVersionsDal";
-import BotVersion from "common/app/BotVersion";
+import { BotVersion } from "common";
 
 export default class PgBotVersionsDal extends BasePostgresqlDal implements IBotVersionsDal {
     private readonly SELECT_BOT_VERSIONS = "SELECT * FROM bot_versions WHERE bot_id = $1";

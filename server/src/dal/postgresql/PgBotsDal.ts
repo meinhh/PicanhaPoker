@@ -1,6 +1,6 @@
 import BasePostgresqlDal from "./BasePostgresqlDal";
 import IBotsDal from "dal/IBotsDal";
-import Bot from "common/app/Bot";
+import { Bot } from "common";
 
 export default class PgBotsDal extends BasePostgresqlDal implements IBotsDal {
     private readonly SELECT_USER_BOTS = "SELECT * FROM bots WHERE owner_user_id = $1";

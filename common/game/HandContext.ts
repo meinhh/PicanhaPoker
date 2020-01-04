@@ -1,6 +1,6 @@
-import Card from '../card/Card';
 import { HandStage } from './HandStage';
-import GameEvent from './gameEvents/GameEvent';
+import { Card } from '../card/Card';
+import { GameEvent } from './gameEvents/GameEvent';
 
 export enum PlayerStatus {
     Folded,
@@ -8,7 +8,7 @@ export enum PlayerStatus {
     Done
 }
 
-export default class HandContext {
+export class HandContext {
     public pot: number;
     public communityCards: Card[];
     public dealer: string;

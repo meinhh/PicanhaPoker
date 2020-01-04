@@ -1,10 +1,10 @@
-import TablePlayerInfo from "./TablePlayerInfo";
-import HandContext from "./HandContext";
+import { PlayerInfo } from "./PlayerInfo";
+import { HandContext } from "./HandContext";
 
-export default class TableContext {
+export class TableContext {
     public smallBlind: number;
     public bigBlind: number;
-    public players: {[playerName: string]: TablePlayerInfo}
+    public players: {[playerName: string]: PlayerInfo}
     public currentPlayingHand: HandContext;
     public handsHistory: HandContext[];
 }
