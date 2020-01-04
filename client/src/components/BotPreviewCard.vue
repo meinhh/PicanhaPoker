@@ -12,7 +12,7 @@
                 PROFIT: <span class="profit">10000$</span>
             </div>
             <div>
-                LAST MODIFIED: <span class="profit">{{bot.activeVersion.dateCreated}}</span>
+                LAST MODIFIED: <span class="profit">{{new Date(bot.activeVersion.dateCreated).toLocaleString()}}</span>
             </div>
 
         </v-card-text>
