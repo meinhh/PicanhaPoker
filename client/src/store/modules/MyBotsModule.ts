@@ -12,7 +12,14 @@ export default class MyBotsModule extends VuexModule {
 
     private _myBots: Bot[] = [];
     private _myBotsLoadingStatus: AsyncState = AsyncState.DONE;
-    private _myBotsLoadingError: string = '';
+    
+    get myBots() {
+        return this._myBots;
+    }
+
+    get myBotsLoadingStatus() {
+        return this._myBotsLoadingStatus;
+    }
 
     @Mutation
     setMyBots(myBots: Bot[]) {
@@ -22,14 +29,6 @@ export default class MyBotsModule extends VuexModule {
     @Mutation
     setMyBotsLoadingStatus(status: AsyncState) {
         this._myBotsLoadingStatus = status;
-    }
-
-    get myBots() {
-        return this._myBots;
-    }
-
-    get myBotsLoadingStatus() {
-        return this._myBotsLoadingStatus;
     }
 
     @Action

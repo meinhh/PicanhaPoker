@@ -8,11 +8,11 @@
         </v-list-item>
 
         <v-card-text class="title">
-            <div>
-                PROFIT: <span class="profit">10000$</span>
+            <div class="balance display-1">
+                10000$
             </div>
-            <div class="caption">
-                LAST MODIFIED: <span class="profit">{{new Date(bot.activeVersion.dateCreated).toLocaleString()}}</span>
+            <div class="body-1">
+                LAST MODIFIED: <span class="last-modified">{{new Date(bot.activeVersion.dateCreated).toLocaleString()}}</span>
             </div>
 
         </v-card-text>
@@ -84,12 +84,14 @@ export default class BotPreviewCard extends Vue {
     opacity: $tp-card-opacity;
     background: $tp-card-bg!important;
 
-    span.profit {
-        color: yellow;
+    div.balance {
+        color: green;
+        text-align: center;
+        padding-bottom: 8px;
     }
 
-    span.last-version {
-        color: purple;
+    span.last-modified {
+        color: yellow;
     }
 }
 </style>

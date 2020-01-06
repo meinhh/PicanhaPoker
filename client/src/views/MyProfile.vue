@@ -24,9 +24,27 @@
             </v-flex>
             <v-flex lg4 style="padding:20px" :key="6" class="d-flex align-stretch">
                 <v-sheet dark tile elevation=10 class="create-bot" width=100%>
-                    <div class="link">
+                    <div class="activator" v-show="!isCreatingBot" @click="startNewBot()">
                         <v-icon color="orange">code</v-icon>
                         <div class="headline">CREATE A BOT</div>
+                    </div>
+                    <div class="bot-creation-form" v-show="isCreatingBot">
+                        <v-form>
+                            <v-container>
+                                <v-row>
+                                    <v-text-field 
+                                        label="Name your bot" 
+                                        v-model="constructedBot.botName"
+                                        required>
+                                    </v-text-field>
+                                </v-row>
+                                <v-row>
+                                    <v-btn text color="success">Save</v-btn> 
+                                    <v-spacer></v-spacer>
+                                    <v-btn text @click="isCreatingBot = false">Cancel</v-btn>
+                                </v-row>
+                            </v-container>
+                        </v-form>
                     </div>
                 </v-sheet>
             </v-flex>
@@ -43,6 +61,15 @@ import ErrorPanel from '@/components/ErrorPanel.vue';
 import Bot from '../../../common/app/Bot';
 import { AsyncState } from '../utils/AsyncState';
 
+class ConstructedBotProperties {
+    public constructor(public botName: string = '', public avatar: string = '') {}
+
+    public reset() {
+        this.botName = '';
+        this.avatar = '';
+    }
+}
+
 @Component({
     components: {
         PageTitle, 
@@ -57,11 +84,25 @@ export default class MyProfile extends Vue {
     @Getter('myBotsLoadingStatus')
     public myBotsLoadingStatus!: AsyncState;
 
-    @Action('loadMyBots') 
-    private loadMyBots: () => void;
+    public isCreatingBot = false;
+    public constructedBot = new ConstructedBotProperties();
 
     public mounted() {
+        this.isCreatingBot = false;
+        this.constructedBot = new ConstructedBotProperties();
+
         this.loadMyBots();
+    }
+
+    @Action('loadMyBots') 
+    public loadMyBots: () => void;
+
+    public startNewBot() {
+        this.isCreatingBot = true;
+    }
+
+    public discardNewBot() {
+        this.isCreatingBot = false;
     }
 }
 </script>
@@ -81,7 +122,7 @@ export default class MyProfile extends Vue {
         align-items: center;
         justify-content: center;
 
-        .link {
+        .activator {
             cursor: pointer;
             .v-icon {
                 font-size: 85px;
