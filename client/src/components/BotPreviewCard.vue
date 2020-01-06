@@ -11,7 +11,7 @@
             <div>
                 PROFIT: <span class="profit">10000$</span>
             </div>
-            <div>
+            <div class="caption">
                 LAST MODIFIED: <span class="profit">{{new Date(bot.activeVersion.dateCreated).toLocaleString()}}</span>
             </div>
 
