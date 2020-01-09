@@ -16,7 +16,7 @@ export default class BotApiAccessorService implements IBotsApiAccessor {
             const bot: Bot = new Bot();
             bot.botId = obj.botId;
             bot.name = obj.name;
-            bot.avatarImageUrl = obj.avatarImageUrl;
+            bot.avatarImgUrl = obj.avatarImgUrl;
             bot.dateCreated = new Date(obj.dateCreated);
             bot.ownerUserId = obj.ownerUserId;
             bot.activeVersionId = obj.activeVersionId;
@@ -26,5 +26,13 @@ export default class BotApiAccessorService implements IBotsApiAccessor {
         })
 
         return bots;
+    }
+
+    public async createBot(botName: string, avatarImageUrl?: string): Promise<Bot> {
+        const response = await axios.post<Bot>(this.API_ENDPOINT + "/bots", {
+            botName: botName,
+            avatarImg: avatarImageUrl
+        });
+        return response.data;
     }
 }

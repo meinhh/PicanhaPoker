@@ -8,12 +8,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: Home,
-  },
-  {
-    path: '/editor',
+    path: '/editor/:botName',
     name: 'editor',
     component: BotEditor,
   },

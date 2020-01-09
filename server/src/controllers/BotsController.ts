@@ -9,7 +9,20 @@ export default class BotsController extends BaseApiRouter {
     }
 
     private async createBot(req: Request, res: Response) {
+        const userId = 1; // Temp - change after authentication
 
+        const {botName, avatarImg} = req.body;
+    
+        if (!botName) {
+            res.status(403).send('Missing bot name');
+        }
+
+        try {
+            const newBot = await this.botsRepository.createBot(botName, userId, avatarImg);
+            res.send(newBot);
+        } catch (ex) {
+            res.status(500).send('Failed to create your bot');
+        }
     }
 
     private async getMyBots(req: Request, res: Response) {

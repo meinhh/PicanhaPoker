@@ -6,7 +6,7 @@ export default class Bot {
     public dateCreated: Date;
     public ownerUserId: number;
     public activeVersionId?: number;
-    public avatarImageUrl?: string;
+    public avatarImgUrl?: string;
 
     public activeVersion?: BotVersion;
 }

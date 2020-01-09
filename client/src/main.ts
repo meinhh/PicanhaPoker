@@ -3,7 +3,6 @@ import Vue from 'vue';
 import buildDependencyContainer from './app.container';
 buildDependencyContainer();
 
-
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -14,6 +13,7 @@ import codemirror from './plugins/codemirror';
 Vue.use(codemirror);
 
 import vuetify from './plugins/vuetify';
+import './plugins/vuetify-dialog';
 
 new Vue({
   router,

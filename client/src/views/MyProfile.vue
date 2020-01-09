@@ -32,16 +32,34 @@
                         <v-form>
                             <v-container>
                                 <v-row>
-                                    <v-text-field 
-                                        label="Name your bot" 
-                                        v-model="constructedBot.botName"
-                                        required>
-                                    </v-text-field>
+                                    <v-layout fill-height align-center justify-center>
+                                        <v-flex style="padding:8px">
+                                            <bot-avatar 
+                                                :click="openAvatarPicker" 
+                                                :src="constructedBot.avatar"></bot-avatar>
+                                        </v-flex>
+                                        <v-flex>
+                                            <v-text-field 
+                                                label="Name your bot" 
+                                                v-model="constructedBot.botName"
+                                                required>
+                                            </v-text-field>
+                                        </v-flex>
+                                    </v-layout>
                                 </v-row>
                                 <v-row>
-                                    <v-btn text color="success">Save</v-btn> 
+                                    <v-btn 
+                                        text 
+                                        color="success" 
+                                        :loading="creatingBotStatus == 'LOADING'"
+                                        @click="createNewBotInvoker">Save</v-btn> 
                                     <v-spacer></v-spacer>
                                     <v-btn text @click="isCreatingBot = false">Cancel</v-btn>
+                                </v-row>
+                                <v-row v-if="creatingBotStatus == 'ERROR'">
+                                    <div class="caption red--text">
+                                        We're sorry, something went wrong. Please try again.
+                                    </div>
                                 </v-row>
                             </v-container>
                         </v-form>
@@ -58,23 +76,19 @@ import { Action, Getter } from 'vuex-class';
 import PageTitle from '@/components/PageTitle.vue';
 import BotPreviewCard from '@/components/BotPreviewCard.vue';
 import ErrorPanel from '@/components/ErrorPanel.vue';
+import BotAvatar from '@/components/BotAvatar.vue';
+import AvatarPickerDialog from '@/components/dialogs/AvatarPicker.dialog.vue';
 import Bot from '../../../common/app/Bot';
 import { AsyncState } from '../utils/AsyncState';
-
-class ConstructedBotProperties {
-    public constructor(public botName: string = '', public avatar: string = '') {}
-
-    public reset() {
-        this.botName = '';
-        this.avatar = '';
-    }
-}
+import { ConstructedBotProperties } from '../store/modules/MyBotsModule';
 
 @Component({
     components: {
         PageTitle, 
         BotPreviewCard,
-        ErrorPanel
+        ErrorPanel,
+        AvatarPickerDialog,
+        BotAvatar
     }
 })
 export default class MyProfile extends Vue {
@@ -83,6 +97,9 @@ export default class MyProfile extends Vue {
 
     @Getter('myBotsLoadingStatus')
     public myBotsLoadingStatus!: AsyncState;
+
+    @Getter('creatingBotStatus')
+    public creatingBotStatus!: AsyncState;
 
     public isCreatingBot = false;
     public constructedBot = new ConstructedBotProperties();
@@ -95,7 +112,10 @@ export default class MyProfile extends Vue {
     }
 
     @Action('loadMyBots') 
-    public loadMyBots: () => void;
+    public loadMyBots!: () => void;
+
+    @Action('createNewBot')
+    public createNewBot!: (botPros: ConstructedBotProperties) => void;
 
     public startNewBot() {
         this.isCreatingBot = true;
@@ -103,6 +123,21 @@ export default class MyProfile extends Vue {
 
     public discardNewBot() {
         this.isCreatingBot = false;
+    }
+
+    public async openAvatarPicker() {
+        const dialog = await this.$dialog.show(AvatarPickerDialog);
+        const avatar = await dialog.wait();
+        this.constructedBot.avatar = avatar ? avatar : '';
+    }
+
+    public async createNewBotInvoker() {
+        await this.createNewBot(this.constructedBot);
+
+        if (this.creatingBotStatus == AsyncState.DONE) {
+            this.isCreatingBot = false;
+            this.constructedBot.reset();
+        }
     }
 }
 </script>

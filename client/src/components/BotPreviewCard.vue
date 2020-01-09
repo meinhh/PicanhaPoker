@@ -2,7 +2,8 @@
     <v-card tile dark raised class="bot-preview-card align-stretch">
         <v-list-item>
             <v-list-item-avatar>
-                <img src="https://www.globalpokerindex.com/wp-content/uploads/2015/08/doyle_brunson-210x210.jpg">
+                <bot-avatar :size="46" :src="bot.avatarImgUrl">
+                </bot-avatar>
             </v-list-item-avatar>
             <v-list-item-title class="display-1 bot-name">{{bot.name}}</v-list-item-title>
         </v-list-item>
@@ -51,8 +52,12 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Bot from '../../../common/app/Bot';
+import BotAvatar from '@/components/BotAvatar.vue';
 
 @Component({
+    components: {
+        BotAvatar
+    }
 })
 export default class BotPreviewCard extends Vue {
     @Prop() public bot: Bot;

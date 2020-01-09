@@ -3,30 +3,28 @@
         <v-layout column fill-height>
             <page-title text="WRITE YOUR BOT"></page-title>
             <v-flex class="editor-container">
-                <!-- <v-layout fill-height column> -->
-                        <v-toolbar dense dark short class="editor-toolbar">
-                            <v-avatar size="32">
-                                <img src="https://www.globalpokerindex.com/wp-content/uploads/2015/08/doyle_brunson-210x210.jpg">
-                            </v-avatar>
-                            <div class="path">
-                                <span class="level">{{username}}</span>
-                                <span class="divier"></span>
-                                <span class="level enabled">{{botName.trim()}}.js</span>
-                            </div>
-                            <v-spacer></v-spacer>
-                            <v-tooltip bottom v-for="action in editorActions" :key="action.icon">
-                                <template v-slot:activator="{ on }">
-                                    <v-btn icon v-on="on">
-                                        <v-icon>{{action.icon}}</v-icon>
-                                    </v-btn>
-                                </template>
-                                <span>{{action.tooltip}}</span>
-                            </v-tooltip>
-                        </v-toolbar>
-                    <div class="editor">
-                        <codemirror v-model="code" :options="cmOptions"></codemirror>
+                <v-toolbar dense dark short class="editor-toolbar">
+                    <v-avatar size="32">
+                        <img src="https://www.globalpokerindex.com/wp-content/uploads/2015/08/doyle_brunson-210x210.jpg">
+                    </v-avatar>
+                    <div class="path">
+                        <span class="level">{{username}}</span>
+                        <span class="divier"></span>
+                        <span class="level enabled">{{botName.trim()}}.js</span>
                     </div>
-                <!-- </v-layout> -->
+                    <v-spacer></v-spacer>
+                    <v-tooltip bottom v-for="action in editorActions" :key="action.icon">
+                        <template v-slot:activator="{ on }">
+                            <v-btn icon v-on="on">
+                                <v-icon>{{action.icon}}</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>{{action.tooltip}}</span>
+                    </v-tooltip>
+                </v-toolbar>
+                <div class="editor">
+                    <codemirror v-model="code" :options="cmOptions"></codemirror>
+                </div>
             </v-flex>
         </v-layout>
     </div>
@@ -42,6 +40,7 @@ import PageTitle from '@/components/PageTitle.vue';
     }
 })
 export default class BotEditor extends Vue {
+    public requestedBotName: string;
     public botName: string = 'MyBot';
     public username: string = 'Picanha';
     public code: string = 'function playTurn(tableContext) {\n\t\n}\n';
@@ -79,6 +78,10 @@ export default class BotEditor extends Vue {
         icon: 'play_circle_outline',
         onClick: null,
     }]
+
+    public mouted() {
+        this.requestedBotName = this.$route.params.botName;
+    }
 }
 </script>
 
@@ -92,12 +95,9 @@ export default class BotEditor extends Vue {
         position: relative;
         overflow: hidden;
         flex: 9;
-        // display: flex;
-        // flex-direction: column;;
         
         .editor-toolbar {
             height: 8%!important;
-            // flex-shrink: 1;
             background-color: $tp-card-bg!important;
             .path {
                 span.level {
