@@ -1,5 +1,13 @@
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
-  ]
+    chainWebpack: config => config.resolve.symlinks(false),
+    transpileDependencies: [
+        "vuetify"
+    ],
+    css: {
+        loaderOptions: {
+            scss: {
+            prependData: `@import "@/scss/app.scss";`
+            }
+        }
+    }
 }

@@ -4,13 +4,14 @@ import BotVersion from "common/app/BotVersion";
 
 export default class PgBotVersionsDal extends BasePostgresqlDal implements IBotVersionsDal {
     private readonly SELECT_BOT_VERSIONS = "SELECT * FROM bot_versions WHERE bot_id = $1";
-    private readonly SELECT_BOT_VERSION_BY_ID = "SELECT * FROM bot_versions WHERE version_id = $1";
+    private readonly SELECT_BOT_VERSION_BY_ID = "SELECT * FROM bot_versions WHERE bot_version_id = $1";
     private readonly SELECT_BOT_VERSION_WITH_CODE = "SELECT ver.bot_version_id, ver.date_created, ver.message, ver.bot_id, cod.code FROM bot_versions ver, bot_versions_code cod WHERE ver.bot_version_id = cod.bot_version_id";
+    private readonly SELECT_BOT_VERSIONS_BY_IDS = "SELECT * FROM bot_versions WHERE bot_version_id  = ANY ($1)";
     private readonly INSERT_BOT_VERSION = "INSERT INTO bot_versions (date_created, message, bot_id) values ($1, $2, $3) RETURNING *";
-    private readonly INSERT_BOT_VERSION_CODE = "INSERT INTO bot_versions_code (bot_version_id, code) values ($1, $2)";
+    private readonly INSERT_BOT_VERSION_CODE = "INSERT INTO bot_versions_code (bot_version_id, code) values ($1, $2) RETURNING *";
     private readonly DELETE_BOT_VERSION = "DELETE FROM bot_versions WHERE bot_version_id = $1";
 
-    public async getBotVersions(botId: number): Promise<BotVersion[]> {
+    public async getVersionsForBot(botId: number): Promise<BotVersion[]> {
         const results = await this.queryExecutor.query<BotVersion[]>(this.SELECT_BOT_VERSIONS, [botId]);
         return results;
     }
@@ -34,6 +35,11 @@ export default class PgBotVersionsDal extends BasePostgresqlDal implements IBotV
 
         return results[0];
     }
+
+    public async getBotVersionsByIds(versionIds: number[]): Promise<BotVersion[]> {
+        const results = await this.queryExecutor.query<BotVersion[]>(this.SELECT_BOT_VERSIONS_BY_IDS, [versionIds]);
+        return results;
+    }
     
     public async createBotVersion(botId: number, code: string, message?: string): Promise<BotVersion> {
         const results = await this.queryExecutor.query<BotVersion[]>(this.INSERT_BOT_VERSION, [new Date(), message, botId]);
@@ -47,14 +53,15 @@ export default class PgBotVersionsDal extends BasePostgresqlDal implements IBotV
             const insertedCode = await this.queryExecutor.query<any[]>(this.INSERT_BOT_VERSION_CODE, [botVersion.botVersionId, code]);
             
             if (insertedCode.length == 0) {
-                // delete the version record!!!    
+                await this.deleteBotVersion(botVersion.botVersionId) ;
+                throw 'Failed to create new bot version';
             }
 
             botVersion.code = code;
             return botVersion;
         } catch(ex) {
-            // delete both version and code
-            throw ex;
+            await this.deleteBotVersion(botVersion.botVersionId) ;
+            throw 'Failed to create new bot version';
         }
     }
 

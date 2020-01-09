@@ -1,40 +1,30 @@
 <template>
     <div class="editor-page" :style="{'background-image': 'url(' + require('../assets/bg6.jpg') + ')'}">
         <v-layout column fill-height>
-            <v-flex class="header" justify-center>
-                <v-layout column fill-height>
-                <div class="display-1 page-title">
-                    WRITE YOUR BOT
-                </div>
-                </v-layout>
-            </v-flex>
+            <page-title text="WRITE YOUR BOT"></page-title>
             <v-flex class="editor-container">
-                <v-layout fill-height column>
-                    <v-flex lg1>
-                        <v-toolbar dense dark short class="editor-toolbar">
-                            <v-avatar size="32">
-                                <img src="https://www.globalpokerindex.com/wp-content/uploads/2015/08/doyle_brunson-210x210.jpg">
-                            </v-avatar>
-                            <div class="path">
-                                <span class="level">{{username}}</span>
-                                <span class="divier"></span>
-                                <span class="level enabled">{{botName.trim()}}.js</span>
-                            </div>
-                            <v-spacer></v-spacer>
-                            <v-tooltip bottom v-for="action in editorActions" :key="action.icon">
-                                <template v-slot:activator="{ on }">
-                                    <v-btn icon v-on="on">
-                                        <v-icon>{{action.icon}}</v-icon>
-                                    </v-btn>
-                                </template>
-                                <span>{{action.tooltip}}</span>
-                            </v-tooltip>
-                        </v-toolbar>
-                    </v-flex>
-                    <v-flex class="editor" lg11>
-                        <codemirror v-model="code" :options="cmOptions"></codemirror>
-                    </v-flex>
-                </v-layout>
+                <v-toolbar dense dark short class="editor-toolbar">
+                    <v-avatar size="32">
+                        <img src="https://www.globalpokerindex.com/wp-content/uploads/2015/08/doyle_brunson-210x210.jpg">
+                    </v-avatar>
+                    <div class="path">
+                        <span class="level">{{username}}</span>
+                        <span class="divier"></span>
+                        <span class="level enabled">{{botName.trim()}}.js</span>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-tooltip bottom v-for="action in editorActions" :key="action.icon">
+                        <template v-slot:activator="{ on }">
+                            <v-btn icon v-on="on">
+                                <v-icon>{{action.icon}}</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>{{action.tooltip}}</span>
+                    </v-tooltip>
+                </v-toolbar>
+                <div class="editor">
+                    <codemirror v-model="code" :options="cmOptions"></codemirror>
+                </div>
             </v-flex>
         </v-layout>
     </div>
@@ -42,10 +32,15 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import PageTitle from '@/components/PageTitle.vue';
 
 @Component({
+    components: {
+        PageTitle
+    }
 })
 export default class BotEditor extends Vue {
+    public requestedBotName: string;
     public botName: string = 'MyBot';
     public username: string = 'Picanha';
     public code: string = 'function playTurn(tableContext) {\n\t\n}\n';
@@ -83,6 +78,10 @@ export default class BotEditor extends Vue {
         icon: 'play_circle_outline',
         onClick: null,
     }]
+
+    public mouted() {
+        this.requestedBotName = this.$route.params.botName;
+    }
 }
 </script>
 
@@ -90,19 +89,6 @@ export default class BotEditor extends Vue {
 .editor-page {
     height: 100%;
     background-size: 100% 100%;
-    
-    .header {
-        opacity: 0.55;
-        background: #000;
-        color: #eee;
-        flex: 1;
-
-        .page-title {
-            text-align: center;
-            padding: 12px;
-            font-family: 'CONSOLAS'!important;
-        }
-    }
 
     .editor-container {
         opacity: 0.9;
@@ -111,7 +97,8 @@ export default class BotEditor extends Vue {
         flex: 9;
         
         .editor-toolbar {
-            background-color: #272822!important;
+            height: 8%!important;
+            background-color: $tp-card-bg!important;
             .path {
                 span.level {
                     margin: 0 10px;
@@ -128,14 +115,17 @@ export default class BotEditor extends Vue {
             }
         }
         .editor {
-            overflow: hidden;
-            height: 100%;
+            height: 92%;
+            flex:1 1 auto;
+            margin-top:0;
+            position:relative;
             .CodeMirror {
-                height: 100%;
-            }
-            .vue-codemirror {
-                height: 100%;
-                text-align: left;
+                position:absolute;
+                top:0;
+                bottom:0;
+                left:0;
+                right:0;
+                height:100%;
             }
         }
     }
