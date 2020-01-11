@@ -4,12 +4,13 @@ import BotsRepository from "bot/BotsRepository";
 import { Request, Response } from "express";
 
 export default class BotsController extends BaseApiRouter {
+    private readonly userId = 1; // Temp - change after authentication
+
     public constructor(private botsRepository: BotsRepository) {
         super();
     }
 
     private async createBot(req: Request, res: Response) {
-        const userId = 1; // Temp - change after authentication
 
         const {botName, avatarImg} = req.body;
     
@@ -18,7 +19,7 @@ export default class BotsController extends BaseApiRouter {
         }
 
         try {
-            const newBot = await this.botsRepository.createBot(botName, userId, avatarImg);
+            const newBot = await this.botsRepository.createBot(botName, this.userId, avatarImg);
             res.send(newBot);
         } catch (ex) {
             res.status(500).send('Failed to create your bot');
@@ -26,20 +27,64 @@ export default class BotsController extends BaseApiRouter {
     }
 
     private async getMyBots(req: Request, res: Response) {
-        const userId = 1; // Temp - change after authentication
-
         try {
-            const userBots = await this.botsRepository.getUserBots(userId);
+            const userBots = await this.botsRepository.getUserBots(this.userId);
             res.status(200).json(userBots);
         } catch (ex) {
             res.status(500).send('Failed to load user bots');
         }
     }
 
+    private async getBotWithCode(req: Request, res: Response) {
+        try {
+            const botName = req.params.botName;
+            const bot = await this.botsRepository.getBotWithActiveCode(botName);
+            res.status(200).json(bot);
+        } catch (ex) {
+            res.status(500).send('Failed to load bot');
+        }
+    }
+
+    private async createBotVersion(req: Request, res: Response) {
+        try {
+            const botId = Number(req.body.botId);
+            const {code, message} = req.body;
+
+            const version = await this.botsRepository.createBotVersion(botId, code, message);
+            res.status(200).json(version);
+        } catch(ex) {
+            res.status(500).send('Failed to create new bot version');
+        }
+    }
+
+    private async getBotVersionCode(req: Request, res: Response) {
+        try {
+            const versionId = Number(req.params.versionId);
+            const version = await this.botsRepository.getBotVersionCode(versionId);
+            res.status(200).json(version);
+        } catch(ex) {
+            res.status(500).send('Failed to fetch version');
+        }
+    }
+
+    private async deleteBotVersion(req: Request, res: Response) {
+        try {
+            const verisonId = Number(req.params.versionId);
+            await this.botsRepository.deleteBotVersion(verisonId);
+            res.status(200).send();
+        } catch(ex) {
+            res.status(500).send('failed to delete bot version id');
+        }
+    }
+
     protected buildRoutes(): RouteAction[] {
         return [
+            { method: HttpMethod.GET, path: '/', handler: this.getMyBots },
+            { method: HttpMethod.GET, path: '/:botName/code', handler: this.getBotWithCode },
+            { method: HttpMethod.GET, path: '/version/:versionId/code', handler: this.getBotVersionCode },
             { method: HttpMethod.POST, path: '/', handler: this.createBot },
-            { method: HttpMethod.GET, path: '/', handler: this.getMyBots }
+            { method: HttpMethod.POST, path: '/version', handler: this.createBotVersion },
+            { method: HttpMethod.DELETE, path: '/version/:versionId', handler: this.deleteBotVersion }
         ]
     }
 }

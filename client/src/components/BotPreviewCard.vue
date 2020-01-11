@@ -15,7 +15,6 @@
             <div class="body-1">
                 LAST MODIFIED: <span class="last-modified">{{new Date(bot.activeVersion.dateCreated).toLocaleString()}}</span>
             </div>
-
         </v-card-text>
 
         <v-card-actions>

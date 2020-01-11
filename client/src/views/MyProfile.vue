@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
+import { Action, Getter, namespace } from 'vuex-class';
 import PageTitle from '@/components/PageTitle.vue';
 import BotPreviewCard from '@/components/BotPreviewCard.vue';
 import ErrorPanel from '@/components/ErrorPanel.vue';

@@ -17,7 +17,7 @@ export class ConstructedBotProperties {
 
 @Module
 export default class MyBotsModule extends VuexModule {
-    @inject('BotsAccessor') private _botsAccessor: IBotsApiAccessor;
+    // @inject('BotsAccessor') private _botsAccessor: IBotsApiAccessor;
 
     private _myBots: Bot[] = [];
     private _myBotsLoadingStatus = AsyncState.DONE;
@@ -55,7 +55,7 @@ export default class MyBotsModule extends VuexModule {
         this.context.commit('setMyBotsLoadingStatus', AsyncState.LOADING);
 
         try {
-            const myBots = await this._botsAccessor.getMyBots();
+            const myBots = await this.context.rootState._botsAccessor.getMyBots();
             this.context.commit('setMyBots', myBots);
             this.context.commit('setMyBotsLoadingStatus', AsyncState.DONE);
         } catch (ex) {
@@ -68,7 +68,7 @@ export default class MyBotsModule extends VuexModule {
         console.log(botProps);
         this.context.commit('setCreatingBotStatus', AsyncState.LOADING);
         try {
-            const newBot = await this._botsAccessor.createBot(botProps.botName, botProps.avatar);
+            const newBot = await this.context.rootState._botsAccessor.createBot(botProps.botName, botProps.avatar);
             this.context.commit('setCreatingBotStatus', AsyncState.DONE);
             this.myBots.push(newBot);
 

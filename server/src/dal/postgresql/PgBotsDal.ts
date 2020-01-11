@@ -5,6 +5,7 @@ import Bot from "common/app/Bot";
 export default class PgBotsDal extends BasePostgresqlDal implements IBotsDal {
     private readonly SELECT_USER_BOTS = "SELECT * FROM bots WHERE owner_user_id = $1";
     private readonly SELECT_BOT_BY_ID = "SELECT * FROM bots WHERE bot_id = $1";
+    private readonly SELECT_BOT_BY_NAME = "SELECT * FROM bots WHERE name = $1";
     private readonly INSERT_BOT = "INSERT INTO bots (name, owner_user_id, avatar_img_url, date_created) values ($1, $2, $3, now()) RETURNING *";
     private readonly UPDATE_BOT_ACTIVE_VERSION = "UPDATE bots SET active_version_id = $2 WHERE bot_id = $1 RETURNING *";
     private readonly DELETE_BOT = "DELETE FROM bots WHERE bot_id = $1 RETURNING *";
@@ -17,6 +18,16 @@ export default class PgBotsDal extends BasePostgresqlDal implements IBotsDal {
     public async getBotById(botId: number): Promise<Bot> {
         const results = await this.queryExecutor.query<Bot[]>(this.SELECT_BOT_BY_ID, [botId])
         
+        if (results.length == 0) {
+            return null;
+        }
+
+        return results[0];
+    }
+
+    public async getByByName(botName: string): Promise<Bot> {
+        const results = await this.queryExecutor.query<Bot[]>(this.SELECT_BOT_BY_NAME, [botName]);
+
         if (results.length == 0) {
             return null;
         }

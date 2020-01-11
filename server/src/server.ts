@@ -2,6 +2,9 @@ import express from 'express';
 import bodyParser = require('body-parser');
 import ExpressCors from 'cors';
 
+const Mung = require('express-mung');
+import ErrorsInterceptor from './controllers/infra/ResponseErrorsLogger';
+
 import User from 'common/app/User';
 import ExecutableBotsFactory from './bot/ExecutableBotsFactory';
 import Postgresql from './dal/postgresql/Postgresql';
@@ -35,7 +38,8 @@ app.get('/:cmd', (req, res) => {
 
 const apiRouter = express.Router()
     .use('/bots', new BotsController(botsRepository).router())
-
 app.use('/api', apiRouter);
+
+app.use(Mung.json(ErrorsInterceptor));
 
 app.listen(port, () => console.log(`app listening on port ${port}!`));

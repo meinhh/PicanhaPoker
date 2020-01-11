@@ -1,6 +1,7 @@
 import IBotVersionsDal from "dal/IBotVersionsDal";
 import IBotsDal from "dal/IBotsDal";
 import Bot from "common/app/Bot";
+import BotVersion from "common/app/BotVersion";
 
 export default class BotsRepository {
     private readonly INITIAL_CODE = "function playTurn(tableContext) {\n\t\n}\n";
@@ -42,5 +43,62 @@ export default class BotsRepository {
         })
 
         return userBots;
+    }
+
+    public async getBotWithActiveCode(botName: string): Promise<Bot> {
+        const bot = await this.botsDal.getByByName(botName);
+
+        if (!bot) {
+            throw 'Bot does not exist';
+        }
+
+        if (!bot.activeVersionId) {
+            throw 'Cannot select bot code because the bot has no active version';
+        }
+
+        const botVersion = await this.getBotVersionCode(bot.activeVersionId);
+        bot.activeVersion = botVersion;
+
+        const allVersions = await this.botVersionsDal.getVersionsForBot(bot.botId);
+        bot.versions = allVersions;
+
+        return bot;
+    }
+
+    public async getBotVersionCode(versionId: number): Promise<BotVersion> {
+        const botVersion = await this.botVersionsDal.getBotVersionWithCode(versionId);
+        if (!botVersion) {
+            throw 'Bot active version does not exist';
+        }
+        return botVersion;
+    }
+
+    public async createBotVersion(botId: number, code: string, message?: string): Promise<BotVersion> {
+        let newVersion: BotVersion;
+
+        try {
+            newVersion = await this.botVersionsDal.createBotVersion(botId, code, message ?? '');
+        } catch(ex) {
+            throw ex;
+        }
+
+        try {
+            const bot = await this.botsDal.setBotActiveVersion(botId, newVersion.botVersionId);
+        } catch(ex) {
+            this.botVersionsDal.deleteBotVersion(newVersion.botVersionId);    
+            throw ex;
+        }
+
+        return newVersion;
+    }
+
+    public async deleteBotVersion(versionId: number): Promise<void> {
+        const bot = await this.botsDal.getBotById(versionId);
+
+        if (bot.activeVersionId == versionId) {
+            throw "it's impossible to delete the bot's active version, please change it before";
+        }
+        
+        await this.botVersionsDal.deleteBotVersion(versionId);
     }
 }

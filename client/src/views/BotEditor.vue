@@ -4,83 +4,239 @@
             <page-title text="WRITE YOUR BOT"></page-title>
             <v-flex class="editor-container">
                 <v-toolbar dense dark short class="editor-toolbar">
-                    <v-avatar size="32">
-                        <img src="https://www.globalpokerindex.com/wp-content/uploads/2015/08/doyle_brunson-210x210.jpg">
-                    </v-avatar>
+                    <bot-avatar :src="bot == null ? '' : bot.avatarImgUrl" :size="32"></bot-avatar>
                     <div class="path">
                         <span class="level">{{username}}</span>
                         <span class="divier"></span>
                         <span class="level enabled">{{botName.trim()}}.js</span>
                     </div>
+                    <v-progress-linear 
+                        :active="contextLoadingStatus == 'LOADING'" 
+                        indeterminate absolute bottom color="primary">
+                    </v-progress-linear>
                     <v-spacer></v-spacer>
                     <v-tooltip bottom v-for="action in editorActions" :key="action.icon">
                         <template v-slot:activator="{ on }">
-                            <v-btn icon v-on="on">
+                            <v-btn icon v-on="on" @click="action.onClick" v-show="isDone">
                                 <v-icon>{{action.icon}}</v-icon>
                             </v-btn>
                         </template>
                         <span>{{action.tooltip}}</span>
                     </v-tooltip>
                 </v-toolbar>
-                <div class="editor">
-                    <codemirror v-model="code" :options="cmOptions"></codemirror>
-                </div>
+                <v-layout 
+                    v-show="botLoadingStatus == 'LOADING'" 
+                    align-center justify-center fill-height>
+                    <v-progress-circular
+                        :width="15"
+                        :size="300"
+                        color="red"
+                        indeterminate></v-progress-circular>
+                </v-layout>
+                <v-layout v-show="botLoadingStatus == 'ERROR'" 
+                    fill-height align-center justify-center>
+                    <v-flex lg6>
+                        <error-panel
+                            flat
+                            :show-image="false" 
+                            title="Oops" 
+                            message="Something went wrong, please try again." 
+                            :retry="() => loadBotToEdit()">
+                        </error-panel>
+                    </v-flex>
+                </v-layout>
+                <v-layout fill-height v-if="isDone">
+                    <v-flex 
+                        class="versions-manager-wrapper"
+                        :class="{'hidden': !shouldShowVersionMgr}">
+                        <div class="static">
+                            <div v-show="!shouldShowVersionMgr">
+                                <v-tooltip right>
+                                    <template v-slot:activator="{on}">
+                                        <v-btn text icon @click="toggleVersionsManager" v-on="on">
+                                            <v-icon>timeline</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Versions & history manager</span>
+                                </v-tooltip>
+                            </div>
+                            <div v-show="shouldShowVersionMgr" class="static-expanded">
+                                <div class="subtitle-1 static-title">Versions</div>
+                                <v-btn text icon @click="toggleVersionsManager">
+                                    <v-icon>clear</v-icon>
+                                </v-btn>
+                            </div>
+                        </div>
+                        <bot-versions-manager 
+                            v-show="shouldShowVersionMgr"
+                            :bot="bot" 
+                            :checkedout-version-id="workingVersion.botVersionId"
+                            :context-menu-options="versionsManagerCtxMenu">    
+                        </bot-versions-manager>
+                    </v-flex>
+                    <v-flex >
+                        <div class="editor">
+                            <codemirror v-model="code" :options="cmOptions"></codemirror>
+                        </div>
+                    </v-flex>
+                </v-layout>
             </v-flex>
         </v-layout>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import PageTitle from '@/components/PageTitle.vue';
+import BotAvatar from '@/components/BotAvatar.vue';
+import ErrorPanel from '@/components/ErrorPanel.vue';
+import CommitVersionDialog from '@/components/dialogs/CommitVersion.dialog.vue';
+import BotVersionsManager from '@/components/BotVersionsManager.vue';
+import { Action, Getter } from 'vuex-class';
+import Bot from '../../../common/app/Bot';
+import { AsyncState } from '../utils/AsyncState';
+import {BotVersionProps} from '../store/modules/BotEditorModule';
+import BotVersion from '../../../common/app/BotVersion';
+import { IContextMenuOption } from '../components/BotVersionsManager.vue';
 
 @Component({
     components: {
-        PageTitle
+        PageTitle,
+        BotAvatar,
+        ErrorPanel,
+        CommitVersionDialog,
+        BotVersionsManager
     }
 })
 export default class BotEditor extends Vue {
-    public requestedBotName: string;
-    public botName: string = 'MyBot';
-    public username: string = 'Picanha';
-    public code: string = 'function playTurn(tableContext) {\n\t\n}\n';
+    @Getter('botToEdit') public bot!: Bot;
+    @Getter('checkedOutVersion') public workingVersion!: BotVersion;
+    @Getter('botLoadingStatus') public botLoadingStatus!: AsyncState;
+    @Getter('contextLoadingStatus') public contextLoadingStatus!: AsyncState;
 
-    public cmOptions = {
-        tabSize: 2,
-        mode: 'text/javascript',
-        theme: 'monokai',
-        lineNumbers: true,
-        line: true,
-        height: 100,
-        styleActiveLine: true,
-        matchBrackets: true,
-        showCursorWhenSelecting: true,
+    public code: string = '';
+    public username: string = 'Picanha';
+    public botName: string = '';
+
+    public cmOptions: any = {};
+    public editorActions: any[] = [];
+    public shouldShowVersionMgr: boolean = false;
+    public versionsManagerCtxMenu: IContextMenuOption[] = [];
+
+    @Action('loadBotToEdit')
+    public loadBotToEdit!: (botName: string) => void;
+
+    @Action('createBotVersion')
+    public createBotVersion!: (versionProps: BotVersionProps) => void;
+
+    @Action('checkoutVersion')
+    public checkoutVersion!: (versionId: number) => void;
+
+    @Action('deleteVersion')
+    public deleteVersion!: (versionId: number) => void;
+
+    public get isDone() {
+        return this.bot != null && this.botLoadingStatus == AsyncState.DONE;
     }
 
-    public editorActions = [{
-        tooltip: 'Documentation',
-        icon: 'menu_book',
-        onClick: null,
-    }, {
-        tooltip: 'Save changes locally',
-        icon: 'save',
-        onClick: null,
-    }, {
-        tooltip: 'Upload changes',
-        icon: 'cloud_upload',
-        onClick: null,
-    }, {
-        tooltip: 'Discard changes',
-        icon: 'clear',
-        onClick: null,
-    }, {
-        tooltip: 'Upload & Run',
-        icon: 'play_circle_outline',
-        onClick: null,
-    }]
+    public toggleVersionsManager() {
+        this.shouldShowVersionMgr = !this.shouldShowVersionMgr;
+    }
 
-    public mouted() {
-        this.requestedBotName = this.$route.params.botName;
+    public created() {
+        this.code = '';
+        this.botName = this.$route.params.botName;
+        this.buildEditorActions();
+        this.buildCodemirrorOptions();
+        this.buildVersionsManagerContextMenu();
+    }
+
+    public mounted() {
+        this.loadBotToEdit(this.botName);
+    }
+
+    @Watch('workingVersion')
+    private onCheckedOutVersionChanged(val: BotVersion) {
+        if (val) {
+            console.log(val);
+            this.code = val.code ? val.code : '';
+        }
+    }
+
+    private async commitChanges() {
+        const dialog = await this.$dialog.show(CommitVersionDialog);
+        const result = await dialog.wait();
+
+        if (result === undefined) {
+            console.log("Commit canceled");
+            return;
+        }
+
+        const props = new BotVersionProps(this.bot.botId, this.code, result);
+        this.createBotVersion(props);
+    }
+
+    private buildVersionsManagerContextMenu() {
+        this.versionsManagerCtxMenu = [{
+            text: "Checkout",
+            onClick: (version) => {
+                console.log("checkout", version);
+                this.checkoutVersion(version.botVersionId);
+            }
+        }, {
+            text: "Delete",
+            onClick: async (version) => {
+                if (version.botVersionId == this.bot.activeVersionId) {
+                    this.$dialog.error({
+                        title: "Nope...",
+                        text: "You can't delete the active version of your bot. First you have to change it."
+                    });
+                    return;
+                }
+
+                const result = await this.$dialog.confirm({
+                    title: "Are you sure?",
+                    text: "You are about to delete a version, and if you would, you can't go back. Are you sure?",
+                    waitForResult: true
+                })
+
+                console.log(result);
+                if (result) {
+                    console.log('delete version', version);
+                    this.deleteVersion(version.botVersionId);
+                }
+            }
+        }]
+    }
+
+    private buildEditorActions() {
+        this.editorActions = [{
+            tooltip: 'Documentation',
+            icon: 'menu_book',
+            onClick: () => {},
+        }, {
+            tooltip: 'Commit changes',
+            icon: 'cloud_upload',
+            onClick: this.commitChanges,
+        }, {
+            tooltip: 'Upload & Run',
+            icon: 'play_circle_outline',
+            onClick: () => {},
+        }];
+    }
+
+    private buildCodemirrorOptions() {
+        this.cmOptions = {
+            tabSize: 2,
+            mode: 'text/javascript',
+            theme: 'monokai',
+            lineNumbers: true,
+            line: true,
+            height: 100,
+            styleActiveLine: true,
+            matchBrackets: true,
+            showCursorWhenSelecting: true,
+        };
     }
 }
 </script>
@@ -95,9 +251,11 @@ export default class BotEditor extends Vue {
         position: relative;
         overflow: hidden;
         flex: 9;
-        
+        background: $tp-card-bg;
+
         .editor-toolbar {
-            height: 8%!important;
+            box-shadow: none;
+            height: 9.5%!important;
             background-color: $tp-card-bg!important;
             .path {
                 span.level {
@@ -114,11 +272,49 @@ export default class BotEditor extends Vue {
                 }
             }
         }
+
+        .versions-manager-wrapper {
+            height: 90.5%;
+            position: relative;
+            flex: 1;
+
+            &.hidden {
+                flex: 0;
+
+                .static {
+                    height: 100%;
+                    padding: 12px;
+                }
+            }
+
+            .static {
+                background: #222;
+
+                .static-expanded {
+                    display: flex;
+                    justify-content: space-between;
+                }
+
+                .static-title {
+                    padding: 0 12px;
+                }
+            }
+
+            .versions-manager {
+                @extend .scrollable; 
+                overflow-y: scroll;
+                height: 100%;
+                width: 100%;
+                position: absolute;
+            }
+        }
+
         .editor {
-            height: 92%;
-            flex:1 1 auto;
-            margin-top:0;
-            position:relative;
+            height: 90.5%;
+            flex: 1 1 auto;
+            margin-top: 0;
+            position: relative;
+
             .CodeMirror {
                 position:absolute;
                 top:0;
@@ -126,6 +322,10 @@ export default class BotEditor extends Vue {
                 left:0;
                 right:0;
                 height:100%;
+
+                .CodeMirror-vscrollbar {                    
+                    @extend .scrollable;
+                }
             }
         }
     }

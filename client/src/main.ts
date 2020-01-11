@@ -5,7 +5,9 @@ buildDependencyContainer();
 
 import App from './App.vue';
 import router from './router';
-import store from './store';
+
+import storeInitializer from './store';
+const store = storeInitializer();
 
 Vue.config.productionTip = false;
 

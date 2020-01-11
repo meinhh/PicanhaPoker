@@ -9,4 +9,5 @@ export default class Bot {
     public avatarImgUrl?: string;
 
     public activeVersion?: BotVersion;
+    public versions?: BotVersion[];
 }
