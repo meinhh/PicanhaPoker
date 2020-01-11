@@ -17,7 +17,13 @@
                     <v-spacer></v-spacer>
                     <v-tooltip bottom v-for="action in editorActions" :key="action.icon">
                         <template v-slot:activator="{ on }">
-                            <v-btn icon v-on="on" @click="action.onClick" v-show="isDone">
+                            <v-btn 
+                                icon 
+                                v-on="on" 
+                                v-shortkey="action.shortcut"
+                                @shortkey="action.onClick"
+                                @click="action.onClick" 
+                                v-show="isDone">
                                 <v-icon>{{action.icon}}</v-icon>
                             </v-btn>
                         </template>
@@ -236,12 +242,15 @@ export default class BotEditor extends Vue {
         this.editorActions = [{
             tooltip: 'Documentation',
             icon: 'menu_book',
+            shortcut: [],
             onClick: () => {},
         }, {
             tooltip: 'Commit changes',
             icon: 'cloud_upload',
+            shortcut: ["ctrl", "shift", "k"],
             onClick: this.commitChanges,
         }, {
+            shortcut: [],
             tooltip: 'Upload & Run',
             icon: 'play_circle_outline',
             onClick: () => {},
