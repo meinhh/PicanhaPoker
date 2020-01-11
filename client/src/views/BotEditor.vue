@@ -56,19 +56,27 @@
                         class="versions-manager-wrapper"
                         :class="{'hidden': !shouldShowVersionMgr}">
                         <div class="static">
-                            <div v-show="!shouldShowVersionMgr">
+                            <div v-if="!shouldShowVersionMgr">
                                 <v-tooltip right>
                                     <template v-slot:activator="{on}">
-                                        <v-btn text icon @click="toggleVersionsManager" v-on="on">
+                                        <v-btn 
+                                            text icon 
+                                            v-shortkey="['ctrl', 'alt', 'v']"
+                                            @shortkey="toggleVersionsManager"
+                                            @click="toggleVersionsManager" 
+                                            v-on="on">
                                             <v-icon>timeline</v-icon>
                                         </v-btn>
                                     </template>
-                                    <span>Manage versions</span>
+                                    <span>Manage versions (Ctrl + Alt  + V)</span>
                                 </v-tooltip>
                             </div>
-                            <div v-show="shouldShowVersionMgr" class="static-expanded">
+                            <div v-if="shouldShowVersionMgr" class="static-expanded">
                                 <div class="subtitle-1 static-title">Versions</div>
-                                <v-btn text icon @click="toggleVersionsManager">
+                                <v-btn text icon 
+                                    @click="toggleVersionsManager" 
+                                    v-shortkey="['ctrl', 'alt', 'v']"
+                                    @shortkey="toggleVersionsManager">
                                     <v-icon>clear</v-icon>
                                 </v-btn>
                             </div>
@@ -247,7 +255,7 @@ export default class BotEditor extends Vue {
         }, {
             tooltip: 'Commit changes',
             icon: 'cloud_upload',
-            shortcut: ["ctrl", "shift", "k"],
+            shortcut: ["ctrl", "alt", "k"],
             onClick: this.commitChanges,
         }, {
             shortcut: [],
