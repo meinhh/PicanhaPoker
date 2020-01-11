@@ -41,7 +41,7 @@
                             :show-image="false" 
                             title="Oops" 
                             message="Something went wrong, please try again." 
-                            :retry="() => loadBotToEdit()">
+                            :retry="() => loadBotToEdit(botName)">
                         </error-panel>
                     </v-flex>
                 </v-layout>
@@ -57,7 +57,7 @@
                                             <v-icon>timeline</v-icon>
                                         </v-btn>
                                     </template>
-                                    <span>Versions & history manager</span>
+                                    <span>Manage versions</span>
                                 </v-tooltip>
                             </div>
                             <div v-show="shouldShowVersionMgr" class="static-expanded">
@@ -135,6 +135,9 @@ export default class BotEditor extends Vue {
     @Action('deleteVersion')
     public deleteVersion!: (versionId: number) => void;
 
+    @Action('activateVersion')
+    public activateVersion!: (versionId: number) => void;
+
     public get isDone() {
         return this.bot != null && this.botLoadingStatus == AsyncState.DONE;
     }
@@ -176,6 +179,40 @@ export default class BotEditor extends Vue {
         this.createBotVersion(props);
     }
 
+    private async deleteVersionInvoker(version: BotVersion) {
+        if (version.botVersionId == this.bot.activeVersionId) {
+            this.$dialog.error({
+                title: "Nope...",
+                text: "You can't delete the active version of your bot. First you have to change it."
+            });
+            return;
+        }
+
+        const result = await this.$dialog.confirm({
+            title: "Are you sure?",
+            text: "You are about to delete a version, and if you would, you can't go back. Are you sure?",
+            waitForResult: true
+        })
+
+        console.log(result);
+        if (result) {
+            console.log('delete version', version);
+            this.deleteVersion(version.botVersionId);
+        }
+    }
+
+    private async activateVersionInvoker(version: BotVersion) {
+        const confirmation = await this.$dialog.confirm({
+            title: "Are you sure?",
+            text: "You are going to activate a different version of your bot. This code will be the one playing the game.",
+            waitForResult: true
+        });
+
+        if (confirmation) {
+            this.activateVersion(version.botVersionId);
+        }
+    }
+
     private buildVersionsManagerContextMenu() {
         this.versionsManagerCtxMenu = [{
             text: "Checkout",
@@ -184,28 +221,14 @@ export default class BotEditor extends Vue {
                 this.checkoutVersion(version.botVersionId);
             }
         }, {
-            text: "Delete",
-            onClick: async (version) => {
-                if (version.botVersionId == this.bot.activeVersionId) {
-                    this.$dialog.error({
-                        title: "Nope...",
-                        text: "You can't delete the active version of your bot. First you have to change it."
-                    });
-                    return;
-                }
-
-                const result = await this.$dialog.confirm({
-                    title: "Are you sure?",
-                    text: "You are about to delete a version, and if you would, you can't go back. Are you sure?",
-                    waitForResult: true
-                })
-
-                console.log(result);
-                if (result) {
-                    console.log('delete version', version);
-                    this.deleteVersion(version.botVersionId);
-                }
+            text: "Activate",
+            onClick: (version: BotVersion) => {
+                console.log("activate version", version);
+                this.activateVersionInvoker(version)
             }
+        }, {
+            text: "Delete",
+            onClick: this.deleteVersionInvoker
         }]
     }
 

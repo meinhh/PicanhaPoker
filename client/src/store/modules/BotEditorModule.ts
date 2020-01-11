@@ -70,6 +70,16 @@ export default class BotEditorModule extends VuexModule {
     }
 
     @Mutation
+    public setBotActiveVersion(version: BotVersion) {
+        if (!this._botToEdit) {
+            return;
+        }
+
+        this._botToEdit.activeVersionId = version.botVersionId;
+        this._botToEdit.activeVersion = version;
+    }
+
+    @Mutation
     public deleteBotVersion(versionId: number) {
         console.log(this._botToEdit)
         if (!this._botToEdit || !this._botToEdit.versions) {
@@ -133,6 +143,23 @@ export default class BotEditorModule extends VuexModule {
             }
 
             this.context.commit('deleteBotVersion', versionId);
+            this.context.commit('setContextLoadingStatus', AsyncState.DONE);
+        } catch(ex) {
+            this.context.commit('setContextLoadingStatus', AsyncState.ERROR);
+        }
+    }
+
+    @Action
+    public async activateVersion(versionId: number) {
+        this.context.commit('setContextLoadingStatus', AsyncState.LOADING);
+        try {
+            if (this._botToEdit && this._botToEdit.activeVersionId == versionId) {
+                this.context.commit('setContextLoadingStatus', AsyncState.DONE);
+                return;
+            }
+
+            const version = await this.context.rootState._botsAccessor.activateBotVersion(versionId);
+            this.context.commit('setBotActiveVersion', version);
             this.context.commit('setContextLoadingStatus', AsyncState.DONE);
         } catch(ex) {
             this.context.commit('setContextLoadingStatus', AsyncState.ERROR);

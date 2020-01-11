@@ -77,12 +77,29 @@ export default class BotsController extends BaseApiRouter {
         }
     }
 
+    private async activateBotVersion(req: Request, res: Response) {
+        try {
+            const versionId = Number(req.body.versionId);
+
+            if (isNaN(versionId)) {
+                res.status(403).send("invalid version id");
+            }
+
+            const version = await this.botsRepository.activateBotVersion(versionId);
+            res.status(200).json(version);
+        } catch(ex) {
+            console.error(ex);
+            res.status(500).send('failed to activate version');
+        }
+    }
+
     protected buildRoutes(): RouteAction[] {
         return [
             { method: HttpMethod.GET, path: '/', handler: this.getMyBots },
             { method: HttpMethod.GET, path: '/:botName/code', handler: this.getBotWithCode },
-            { method: HttpMethod.GET, path: '/version/:versionId/code', handler: this.getBotVersionCode },
             { method: HttpMethod.POST, path: '/', handler: this.createBot },
+            { method: HttpMethod.GET, path: '/version/:versionId/code', handler: this.getBotVersionCode },
+            { method: HttpMethod.PUT, path: '/version/activate', handler: this.activateBotVersion },
             { method: HttpMethod.POST, path: '/version', handler: this.createBotVersion },
             { method: HttpMethod.DELETE, path: '/version/:versionId', handler: this.deleteBotVersion }
         ]

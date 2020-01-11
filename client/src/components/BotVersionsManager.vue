@@ -19,7 +19,7 @@
                         <v-flex>
                             <span class="caption">{{version.message}}</span>
                         </v-flex>
-                        <v-flex lg5>
+                        <v-flex lg4>
                             <span class="caption version-date">
                                 {{new Date(version.dateCreated).toLocaleString()}}
                             </span>

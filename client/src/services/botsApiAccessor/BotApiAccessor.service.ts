@@ -51,6 +51,13 @@ export default class BotApiAccessorService implements IBotsApiAccessor {
         await axios.delete(this.API_ENDPOINT + "/bots/version/" + verisonId);
     }
 
+    public async activateBotVersion(botVersionId: number) {
+        const response = await axios.put(this.API_ENDPOINT + "/bots/version/activate", {
+            versionId: botVersionId
+        });
+        return response.data;
+    }
+
     private parseBot(obj: any): Bot {
         const bot: Bot = new Bot();
         bot.botId = obj.botId;

@@ -8,4 +8,5 @@ export default interface IBotsApiAccessor {
     createBotVersion(botId: number, code: string, message?: string): Promise<BotVersion>;
     loadBotVersion(versionId: number): Promise<BotVersion>;
     deleteBotVersion(versionId: number): Promise<void>;
+    activateBotVersion(versionId: number): Promise<BotVersion>;
 }

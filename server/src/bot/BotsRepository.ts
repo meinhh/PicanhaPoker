@@ -10,6 +10,12 @@ export default class BotsRepository {
     public constructor(private botsDal: IBotsDal, private botVersionsDal: IBotVersionsDal) {
     }
 
+    public async doesUserOwnBot(botName: string, userId: number): Promise<boolean> {
+        const bot = await this.botsDal.getByByName(botName);
+        const result = (bot.ownerUserId == userId);
+        return result;
+    }
+
     public async createBot(botName: string, ownerUserId: number, avatarUrl?: string): Promise<Bot> {
         let bot: Bot;
 
@@ -100,5 +106,11 @@ export default class BotsRepository {
         }
         
         await this.botVersionsDal.deleteBotVersion(versionId);
+    }
+
+    public async activateBotVersion(versionId: number): Promise<BotVersion> {
+        const botVersion = await this.botVersionsDal.getBotVersionWithCode(versionId);
+        await this.botsDal.setBotActiveVersion(botVersion.botId, versionId);
+        return botVersion;
     }
 }
