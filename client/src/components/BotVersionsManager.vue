@@ -68,6 +68,10 @@ export default class BotVersionsManager extends Vue {
     public inspectedVersion: BotVersion | null = null;
 
     public get botVersions() {
+        if (!this.bot || !this.bot.versions) {
+            return;
+        }
+        
         return this.bot.versions.sort((ver1, ver2) => 
             new Date(ver2.dateCreated).getTime() - new Date(ver1.dateCreated).getTime())
     }
@@ -85,6 +89,10 @@ export default class BotVersionsManager extends Vue {
     }
 
     public invokeOptionCallback(option: IContextMenuOption) {
+        if (!this.inspectedVersion) {
+            return;
+        }
+
         option.onClick(this.inspectedVersion);
     }
 
