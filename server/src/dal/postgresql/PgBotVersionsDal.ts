@@ -17,7 +17,7 @@ export default class PgBotVersionsDal extends BasePostgresqlDal implements IBotV
     }
 
     public async getBotVersion(versionId: number): Promise<BotVersion> {
-        const results = await this.queryExecutor.query<BotVersion[]>(this.SELECT_BOT_VERSION_BY_ID);
+        const results = await this.queryExecutor.query<BotVersion[]>(this.SELECT_BOT_VERSION_BY_ID, [versionId]);
 
         if (results.length == 0) {
             return null;

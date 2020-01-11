@@ -4,7 +4,11 @@
             Commit your changes
         </v-card-title>
         <v-card-text>
-            <v-text-field v-model="message" label="Describe what you did">
+            <v-text-field 
+                ref="inputRef"
+                v-model="message" 
+                label="Describe what you did" 
+                @keydown="inputKeydown">
             </v-text-field>
         </v-card-text>
         <v-card-actions>
@@ -30,6 +34,18 @@ export default class CommitVersionDialog extends Vue {
 
     public close() {
         this.$emit('submit');
+    }
+
+    public inputKeydown(e: KeyboardEvent) {
+        if (e.key == 'Enter') {
+            this.submit();
+        }
+    }
+
+    public mounted() {
+        this.$nextTick(() => {
+            (this.$refs.inputRef as any).focus();
+        })
     }
 }
 </script>

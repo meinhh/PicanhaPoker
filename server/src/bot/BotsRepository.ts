@@ -99,7 +99,13 @@ export default class BotsRepository {
     }
 
     public async deleteBotVersion(versionId: number): Promise<void> {
-        const bot = await this.botsDal.getBotById(versionId);
+        const version = await this.botVersionsDal.getBotVersion(versionId);
+
+        if (!version) {
+            throw 'version not found';
+        }
+
+        const bot = await this.botsDal.getBotById(version.botId);
 
         if (bot.activeVersionId == versionId) {
             throw "it's impossible to delete the bot's active version, please change it before";

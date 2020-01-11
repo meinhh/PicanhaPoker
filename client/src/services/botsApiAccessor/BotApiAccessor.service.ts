@@ -35,6 +35,7 @@ export default class BotApiAccessorService implements IBotsApiAccessor {
 
     public async createBotVersion(botId: number, code: string, message?: string): Promise<BotVersion> {
         const response = await axios.post<BotVersion>(this.API_ENDPOINT + "/bots/version", {
+            botId: botId,
             code: code,
             message: message
         });

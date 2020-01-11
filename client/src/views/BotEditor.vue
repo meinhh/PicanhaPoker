@@ -253,7 +253,7 @@ export default class BotEditor extends Vue {
             shortcut: [],
             onClick: () => {},
         }, {
-            tooltip: 'Commit changes',
+            tooltip: 'Commit changes (Ctrl + Alt + K)',
             icon: 'cloud_upload',
             shortcut: ["ctrl", "alt", "k"],
             onClick: this.commitChanges,
