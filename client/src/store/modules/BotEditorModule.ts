@@ -127,6 +127,11 @@ export default class BotEditorModule extends VuexModule {
         this.context.commit('setContextLoadingStatus', AsyncState.LOADING);
         try {
             await this.context.rootState._botsAccessor.deleteBotVersion(versionId);
+            
+            if (this._checkedoutVersion && this._botToEdit && versionId == this._checkedoutVersion.botVersionId) {
+                this.context.commit('setCheckedoutVersion', this._botToEdit.activeVersion);
+            }
+
             this.context.commit('deleteBotVersion', versionId);
             this.context.commit('setContextLoadingStatus', AsyncState.DONE);
         } catch(ex) {
