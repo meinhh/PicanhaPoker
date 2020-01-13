@@ -9,6 +9,7 @@
                         <span class="level">{{username}}</span>
                         <span class="divier"></span>
                         <span class="level enabled">{{botName.trim()}}.js</span>
+                        <span class="text--grey caption" v-if="isDone">#{{workingVersion.botVersionId}}</span>
                     </div>
                     <v-progress-linear 
                         :active="contextLoadingStatus == 'LOADING'" 

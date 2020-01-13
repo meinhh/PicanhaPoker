@@ -25,7 +25,7 @@
                     </v-btn>
                 </template>
                 <v-list>
-                    <v-list-item v-for="action in menuActions" :key="action.caption" @click="() => {}">
+                    <v-list-item v-for="action in menuActions" :key="action.caption" @click="action.onClick">
                         <v-list-item-icon>
                             <v-icon>{{action.icon}}</v-icon>
                         </v-list-item-icon>
@@ -38,7 +38,7 @@
             
             <v-tooltip bottom v-for="action in quickActions" :key="action.icon">
                 <template v-slot:activator="{ on }">
-                    <v-btn icon color="orange" v-on="on" large>
+                    <v-btn icon color="orange" v-on="on" large @click="action.onClick">
                         <v-icon>{{action.icon}}</v-icon>
                     </v-btn>
                 </template>
@@ -64,22 +64,33 @@ export default class BotPreviewCard extends Vue {
     public menuActions= [ {
         icon: "edit",
         caption: "Edit details",
-        onClick: null
+        onClick: () => {}
     }, {
         icon: "delete",
         caption: "Delete bot",
-        onClick: null
+        onClick: () => {}
     }]
 
     public quickActions = [{
         tooltip: "Bot stats",
         icon: "trending_up",
-        onClick: null
+        onClick: () => {}
     }, {
         tooltip: "Code",
         icon: "code",
-        onClick: null
+        onClick: () => {
+            this.jumpToBotCode();    
+        }
     }]
+
+    private jumpToBotCode() {
+        this.$router.push({
+            name: 'editor',
+            params: {
+                botName: this.bot.name
+            }
+        })
+    }
 }
 </script>
 

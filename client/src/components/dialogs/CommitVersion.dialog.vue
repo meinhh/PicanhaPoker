@@ -44,7 +44,7 @@ export default class CommitVersionDialog extends Vue {
 
     public mounted() {
         this.$nextTick(() => {
-            (this.$refs.inputRef as any).focus();
+            setTimeout(() => (this.$refs.inputRef as any).focus(), 200);
         })
     }
 }
