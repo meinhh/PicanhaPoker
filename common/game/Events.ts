@@ -10,6 +10,7 @@ export enum EventType {
     Fold,
     Call,
     Raise,
+    AllIn,
     Flop,
     Turn,
     River,
@@ -58,6 +59,10 @@ export class CallEvent extends Event {
 export class RaiseEvent extends Event {
     type: EventType = EventType.Raise;
     amount: number;
+}
+
+export class AllInEvent extends Event {
+    type: EventType = EventType.AllIn;
 }
 
 export class FlopEvent extends Event {
