@@ -77,7 +77,7 @@ class CombinedReducers<T> implements Reducer<T> {
 
     public apply(value: T, event: Event): T {
         return _.chain(value).entries()
-                            .map(([key, value]) => this.reducers[key].apply(value[key], event, value))
+                            .map(([key, value]) => [key, this.reducers[key].apply(value[key], event, value)])
                             .fromPairs().value();
     }
 }
