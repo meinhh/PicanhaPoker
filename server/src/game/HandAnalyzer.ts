@@ -21,9 +21,6 @@ export default class HandAnalyzer {
 			.mapValues((x: string[]) => x.length / this.TIMES_TO_RUN)
 			.value();
 	}
-		const handsValues: _.mapValues(playersHands, hand => this.HandValue([...communityCards, ...hand]));
-
-	}
 
 	private PairPredicate(cards: Card[]): boolean {
 		return _.chain(cards)
@@ -85,13 +82,13 @@ export default class HandAnalyzer {
 
 	private BoatPredicate(cards: Card[]): boolean {
 		const existingTriplets = _.chain(cards)
-			.groupBy(c => c.rank)
-			.pickBy(c => c.length === 3)
+			.groupBy(card => card.rank)
+			.pickBy(group => group.length === 3)
 			.keys()
 			.value();
 
-		return existingTriplets.map(tripletCard => cards.filter(card => card.rank != tripletCard))
-			.filter(cards => this.PairPredicate(cards)).some();
+		return existingTriplets.map(tripletCard => cards.filter(card => card.rank != CardRank[tripletCard]))
+			.some(cards => this.PairPredicate(cards));
 	}
 
 	private QuadsPredicate(cards: Card[]): boolean {
@@ -119,8 +116,8 @@ export default class HandAnalyzer {
 	}
 
 	private HandValue(cards: Card[]): HandValue {
-		return _.max(Object.keys(this.handValuesPredicates)
-			.filter(handValue => this.handValuesPredicates[handValue](cards)))
+		return _.max(Object.keys(HandValue)
+			.filter(handValue => this.handValuesPredicates[HandValue[handValue]](cards)))
 	}
 
 	private handValuesPredicates = {
@@ -160,14 +157,14 @@ export default class HandAnalyzer {
 
 	private twoPairFullHand(cards: Card[]): Card[] {
 		const pairRanks =_.chain(cards)
-			.groupBy(c => c.rank)
-			.pickBy(c => c.length === 2)
+			.groupBy(card => card.rank)
+			.pickBy(group => group.length === 2)
 			.keys()
 			.sort()
 			.reverse()
 			.take(2);
 		
-		const [pairs, remainingCards] = _.partition(cards, card => pairRanks.includes(card.rank));
+		const [pairs, remainingCards] = _.partition(cards, card => pairRanks.includes(CardRank[card.rank]));
 
 		return [...pairs, ...this.takeTopN(remainingCards, 1)];
 	}
@@ -194,28 +191,36 @@ export default class HandAnalyzer {
 	}
 
 	private flushFullHand(cards: Card[]): Card[] {
-		const flushSuit: CardSuit = _.chain(cards)
+		const flushSuit: CardSuit = CardSuit[
+			_.chain(cards)
 			.groupBy(c => c.suit)
-			.pickBy(c => c.length >= 5)
+			.pickBy(group => group.length >= 5)
 			.keys()
-			.first();
+			.value()[0]
+		];
 		
 		return this.takeTopN(cards.filter(card => card.suit == flushSuit), 5);
 	}
 
 	private boatFullHand(cards: Card[]): Card[] {
-		const topTripletRank = _.chain(cards)
-			.groupBy(c => c.rank)
-			.pickBy(c => c.length === 3)
+		const topTripletRank = CardRank[ 
+			_.chain(cards)
+			.groupBy(card => card.rank)
+			.pickBy(group => group.length === 3)
 			.keys()
-			.maxBy(card => card.rank);
+			.maxBy(rank => parseInt(rank))
+			.value()
+		];
 
-		const topPairRank = _.chain(cards)
+		const topPairRank = CardRank[
+			_.chain(cards)
 			.filter(card => card.rank != topTripletRank)
-			.groupBy(c => c.rank)
-			.pickBy(c => c.length === 2)
+			.groupBy(card => card.rank)
+			.pickBy(group => group.length === 2)
 			.keys()
-			.max(card => card.rank);
+			.maxBy(rank => parseInt(rank))
+			.value()
+		];
 
 		return [
 			...cards.filter(card => card.rank == topTripletRank),
@@ -225,8 +230,8 @@ export default class HandAnalyzer {
 
 	private quadsFullHand(cards: Card[]): Card[] {
 		const quadsRank = _.chain(cards)
-			.groupBy(c => c.rank)
-			.pickBy(c => c.length === 4)
+			.groupBy(card => card.rank)
+			.pickBy(group => group.length === 4)
 			.keys()
 			.first();
 		
