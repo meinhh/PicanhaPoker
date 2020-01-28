@@ -72,17 +72,13 @@ class CombinedReducers<T> implements Reducer<T> {
     public constructor(private readonly reducers: ReducerMap<T>) {}
 
     public intial(): T {
-        return this.combineReducersResults(reducer => reducer.intial()); 
+        return _.mapValues(this.reducers, reducer => reducer.intial());
     }
 
     public apply(value: T, event: Event): T {
-        return this.combineReducersResults((reducer, key) => reducer.apply(value[key], event, value)); 
-    }  
-
-    private combineReducersResults<T>(valueExtractor: <K extends keyof T>(reducer: Reducer<T[K]> | PartialReducer<T[K], T>, key: K) => T[K]): T {
-        return <T> _.chain(this.reducers).entries()
-                                         .map(<S extends keyof T>(key: S, reducer: Reducer<T[S]> | PartialReducer<T[S], T>) => [key, valueExtractor(reducer, key)])
-                                         .fromPairs().value();
+        return _.chain(value).entries()
+                            .map(([key, value]) => this.reducers[key].apply(value[key], event, value))
+                            .fromPairs().value();
     }
 }
 
