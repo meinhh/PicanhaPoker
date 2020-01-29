@@ -6,8 +6,9 @@ export default interface Reducer<T> {
     intial(): T;
 }
 
-export interface PartialReducer<T, K> extends Reducer<T> {
-    apply(value: T, event: Event, context?: K): T;
+export interface PartialReducer<T, K> {
+    apply(value: T, event: Event, context: K): T;
+    intial(): T;
 }
 
 export abstract class BasePartialReducer<T, K> implements PartialReducer<T, K> {
