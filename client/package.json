@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "codemirror": "^5.50.2",
     "core-js": "^3.4.4",
     "inversify-props": "^1.4.9",
